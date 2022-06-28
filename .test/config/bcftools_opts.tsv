@@ -1,0 +1,2 @@
+id	opts
+Biallelic-SNPS-0.1	-v snps -m 2 -M 2 -i 'FILTER="PASS" & MAF >= 0.1' 

@@ -1,0 +1,2 @@
+id	bcf_path	scaff_group_path	genome_path
+TEST_19Mb	.test/bcf/test.bcf	.test/bcf/test.bcf.scaff_groups.tsv	resources/test.bcf.genome.fasta

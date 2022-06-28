@@ -1,0 +1,14 @@
+
+# a TSV giving paths of BCF files
+bcf_tsv: ".test/config/bcfs.tsv"
+
+# a directory that contains single-column files with a .txt extension
+# that give individuals in different groups.  They can be accessed
+# with the {sample_subset} wildcard
+samp_subs_dir: ".test/config/sample_subsets"
+
+
+# a TSV file with a column id, that is the name of the set of options,
+# a column opts which is a string of options used for filtering.
+# Accessed via the wildcard {bcftools_opts}
+bcftools_opts: ".test/config/bcftools_opts.tsv"

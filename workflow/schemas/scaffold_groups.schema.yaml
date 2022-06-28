@@ -1,0 +1,22 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+
+description: an entry in the chromosomes sheet
+properties:
+  id:
+    type: string
+    description: scaffold_group identifier
+  chrom:
+    type: string
+    description: name of scaffold
+  start:
+    type: integer
+    description: starting base of the segment.  Typically 1, unless you are doing subsets.
+  stop:
+    type: integer
+    description: ending base of the segment.  Typically the length of the chromosome, unless you are doing pieces within a chromosome.
+
+required:
+  - id
+  - chrom
+  - start
+  - stop

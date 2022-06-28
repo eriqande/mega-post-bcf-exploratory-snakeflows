@@ -1,0 +1,21 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+
+description: an entry in the chromosomes sheet
+properties:
+  id:
+    type: string
+    description: identifier for the BCF file
+  bcf_path:
+    type: string
+    description: path to the BCF file
+  scaff_group_path:
+    type: string
+    description: path to the file with scaffold groups for the BCF
+  genome_path:
+    type: string
+    description: path to the file with genome that the BCF file was called against
+required:
+  - id
+  - bcf_path
+  - scaff_group_path
+  - genome_path

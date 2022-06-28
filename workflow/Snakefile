@@ -1,0 +1,13 @@
+
+
+include: "rules/common.smk"
+
+localrules: write_bcf_regions
+
+
+
+
+
+
+include: "rules/regions.smk"
+include: "rules/formats.smk"

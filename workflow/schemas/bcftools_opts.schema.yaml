@@ -1,0 +1,13 @@
+$schema: "http://json-schema.org/draft-04/schema#"
+
+description: an entry in the chromosomes sheet
+properties:
+  id:
+    type: string
+    description: identifier for the set of options
+  opts:
+    type: string
+    description: the options 
+required:
+  - id
+  - opts
