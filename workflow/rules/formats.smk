@@ -12,19 +12,15 @@ rule beagle3_glikes_from_PL_scattered:
 		sfile=sample_subset_file,
 		bcfopts=get_bcftools_opts
 	output:
-		top_row="results/bcf_{bcf_file}/samp-sub_{sample_subset}/bcft-opts_{bcftools_opts}/beagle-gl/sections/{scaff_grp}.toprow.gz",
-		body="results/bcf_{bcf_file}/samp-sub_{sample_subset}/bcft-opts_{bcftools_opts}/beagle-gl/sections/{scaff_grp}.body.gz"
+		top_row="results/bcf_{bcf_file}/thin_{thin_int}_{thin_start}/samp-sub_{sample_subset}/bcft-opts_{bcftools_opts}/beagle-gl/sections/{scaff_grp}.toprow.gz",
+		body="results/bcf_{bcf_file}/thin_{thin_int}_{thin_start}/samp-sub_{sample_subset}/bcft-opts_{bcftools_opts}/beagle-gl/sections/{scaff_grp}.body.gz"
 	log:
-		"results/logs/beagle3_glikes_from_PL_scattered/bcf_{bcf_file}/samp-sub_{sample_subset}/bcft-opts_{bcftools_opts}/sections/{scaff_grp}.log"
+		"results/logs/beagle3_glikes_from_PL_scattered/bcf_{bcf_file}/thin_{thin_int}_{thin_start}/samp-sub_{sample_subset}/bcft-opts_{bcftools_opts}/sections/{scaff_grp}.log"
 	conda:
 		"../envs/bcftools.yaml"
 	shell:
 		" (bcftools query -S {params.sfile} -l {input.bcf} | " 
-		" awk ' "
-		"    BEGIN {{printf(\"marker\\tallele1\\tallele2\")}} "
-		"    {{for(i=1;i<=3;i++) printf(\"\\t%s\", $1)}} "
-		"    END {{printf(\"\\n\");}} "
-		" ' | gzip -c > {output.top_row}) 2> {log}; "
+		" awk -f workflow/scripts/beagle3header.awk  | gzip -c > {output.top_row}) 2> {log}; "
 		"        "
 		" (bcftools view -Ou {params.bcfopts} -S {params.sfile} -R {input.regions} {input.bcf} |  "
 		" bcftools query -f '%CHROM:%POS\\t%REF\\t%ALT[\\t%PL]\\n' | "
@@ -32,11 +28,11 @@ rule beagle3_glikes_from_PL_scattered:
 
 
 
-rule beagle3_glikes_from_PL_gathered:
+rule gather_beagle3_glikes_from_PL:
 	input: 
-		header=lambda wc: expand("results/bcf_{{bcf_file}}/samp-sub_{{sample_subset}}/bcft-opts_{{bcftools_opts}}/beagle-gl/sections/{sg}.toprow.gz", sg=first_scaff_group_id(wc)),
-		scaff_gzs = lambda wc: expand("results/bcf_{{bcf_file}}/samp-sub_{{sample_subset}}/bcft-opts_{{bcftools_opts}}/beagle-gl/sections/{sg}.body.gz", sg=all_scaff_group_ids(wc))
+		header=lambda wc: expand("results/bcf_{{bcf_file}}/thin_{{thin_int}}_{{thin_start}}/samp-sub_{{sample_subset}}/bcft-opts_{{bcftools_opts}}/beagle-gl/sections/{sg}.toprow.gz", sg=first_scaff_group_id(wc)),
+		scaff_gzs = lambda wc: expand("results/bcf_{{bcf_file}}/thin_{{thin_int}}_{{thin_start}}/samp-sub_{{sample_subset}}/bcft-opts_{{bcftools_opts}}/beagle-gl/sections/{sg}.body.gz", sg=all_scaff_group_ids(wc))
 	output:
-		"results/bcf_{bcf_file}/samp-sub_{sample_subset}/bcft-opts_{bcftools_opts}/beagle-gl/all-scaffs.gz"
+		"results/bcf_{bcf_file}/thin_{thin_int}_{thin_start}/samp-sub_{sample_subset}/bcft-opts_{bcftools_opts}/beagle-gl/all-scaffs.gz"
 	shell:
 		"cat {input.header} {input.scaff_gzs} > {output}"

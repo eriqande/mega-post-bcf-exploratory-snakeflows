@@ -39,12 +39,15 @@ for the basic BCF maneuvers:
 But, now that I think about it, I'd say the thinning factors should be part of the
 filtering criteria.  So, instead, the basic structure would be:
 ```python
-bcf_{bcf_file}/samp-sub_{sample_subset}/filt_{filter_crit}/
+bcf_{bcf_file}/thin_{thin_int}_{thin_start}/samp-sub_{sample_subset}/filt_{filter_crit}/
 ```
 
 My idea for these wildcards is, then:
 
 * `{bcf_file}` is the tag given in a TSV file to a path to a BCF
+* `{thin_int}` and `{thin_start}`  These are there for doing simple deterministic
+thinning of the file, starting at variant `thin_start` and then taking every
+`thin_int`-th marker after that.  If either of them is 0, there is no thinning done.
 * `{sample_subset}` is the name given to a subset of samples in the BCF file.  The actual
 samples themselves are given in a file, typically 
 `config/sample_subsets/{sample_subset}.txt`, that can be read easily by bcftools
