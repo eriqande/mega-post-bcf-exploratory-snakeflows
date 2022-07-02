@@ -2,12 +2,13 @@
 
 include: "rules/common.smk"
 
-localrules: write_bcf_regions
+#localrules: write_bcf_regions
 
 
 
 
 
-
-include: "rules/regions.smk"
-include: "rules/formats.smk"
+include: "rules/bcftools_filter.smk"
+include: "rules/bcftools_thin.smk"
+#include: "rules/regions.smk"
+#include: "rules/formats.smk"

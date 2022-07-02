@@ -75,6 +75,14 @@ I do believe.
 Each row is a chromosome from the reference genome, in the order that
 they appear in the genome.  
 
+## Revamping this all
+
+I decided that it would be better to have all the filtering up front
+in bcftools, and then we can do thinning from there.  Complete rewrite, but
+I think it will serve us better.
+
+
+
 ## Development
 
 ### Wildcards in play at the moment

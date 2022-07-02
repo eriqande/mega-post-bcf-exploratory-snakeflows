@@ -1,2 +1,2 @@
-id	bcf_path	scaff_group_path	genome_path
-TEST_19Mb	.test/bcf/test.bcf	.test/bcf/test.bcf.scaff_groups.tsv	resources/test.bcf.genome.fasta
+id	parent_bcf_path	sample_subset_path	bcftools_opts	scaff_group_path	genome_path
+TEST-Biallelic-SNPS-5-fish-maf-0.1	.test/bcf/test.bcf	.test/config/sample_subsets/fish5.txt	-v snps -m 2 -M 2 -i 'FILTER="PASS" & MAF >= 0.1'	.test/bcf/test.bcf.scaff_groups.tsv	resources/test.bcf.genome.fasta

@@ -5,9 +5,15 @@ properties:
   id:
     type: string
     description: identifier for the BCF file
-  bcf_path:
+  parent_bcf_path:
     type: string
-    description: path to the BCF file
+    description: path to the BCF file that will be used to make the new one
+  sample_subset_path:
+    type: string
+    description: path to the file holding the sample names to be included
+  bcftools_opts:
+    type: string
+    description: the (typically filtering) options to be passed to bcftools
   scaff_group_path:
     type: string
     description: path to the file with scaffold groups for the BCF
@@ -16,6 +22,8 @@ properties:
     description: path to the file with genome that the BCF file was called against
 required:
   - id
-  - bcf_path
+  - parent_bcf_path
+  - sample_subset_path
+  - bcftools_opts
   - scaff_group_path
   - genome_path
