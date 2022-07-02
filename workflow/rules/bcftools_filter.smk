@@ -13,7 +13,7 @@ rule bcftools_subsamp_and_filt_scatter:
 		scaff_members=temp("results/bcf/{bcf_id}/thin_0_0/sections/{scaff_grp}.scaff_members.tsv"),
 		bcf=temp("results/bcf/{bcf_id}/thin_0_0/sections/{scaff_grp}.bcf"),
 		stats=temp("results/bcf/{bcf_id}/thin_0_0/sections/{scaff_grp}.bcf_stats.txt"),
-		pos=temp("results/bcf/{bcf_id}/thin_0_0/sections/{scaff_grp}.positions.tsv.gz"),
+		pos="results/bcf/{bcf_id}/thin_0_0/sections/{scaff_grp}.positions.tsv.gz",
 	conda:
 		"../envs/bcftools.yaml"
 	log:

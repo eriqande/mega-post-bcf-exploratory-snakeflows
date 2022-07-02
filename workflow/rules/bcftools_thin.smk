@@ -5,8 +5,7 @@
 rule bcftools_thin_scatter:
 	input:
 		bcf="results/bcf/{bcf_id}/thin_0_0/main.bcf",
-		pos="results/bcf/{bcf_id}/thin_0_0/sections/{scaff_grp}.positions.tsv.gz",
-		scaff_grp_path="results/bcf/{bcf_id}/thin_0_0/info/scaffold_groups.tsv"
+		pos="results/bcf/{bcf_id}/thin_0_0/sections/{scaff_grp}.positions.tsv.gz"
 	params:
 		thin_int="{thin_int}",
 		thin_start="{thin_start}",
