@@ -1,4 +1,9 @@
 
+# these ruleorders are needed to make sure that when you ask for thin_0_0,
+# Snakemake will run the bcftools_subsamp_and_filt versions rather than the
+# bcftools_thin versions
+ruleorder:  bcf_samps_and_filt_scatter > bcf_thin_scatter
+ruleorder:  bcf_samps_and_filt_gather > bcf_thin_gather
 
 include: "rules/common.smk"
 
@@ -7,8 +12,7 @@ include: "rules/common.smk"
 
 
 
-
 include: "rules/bcftools_filter.smk"
 include: "rules/bcftools_thin.smk"
 #include: "rules/regions.smk"
-#include: "rules/formats.smk"
+include: "rules/formats.smk"

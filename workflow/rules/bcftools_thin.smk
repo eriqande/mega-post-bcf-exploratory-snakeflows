@@ -2,7 +2,7 @@
 
 
 
-rule bcftools_thin_scatter:
+rule bcf_thin_scatter:
 	input:
 		bcf="results/bcf/{bcf_id}/thin_0_0/main.bcf",
 		pos="results/bcf/{bcf_id}/thin_0_0/sections/{scaff_grp}.positions.tsv.gz"
@@ -17,9 +17,9 @@ rule bcftools_thin_scatter:
 	conda:
 		"../envs/bcftools.yaml"
 	log:
-		"results/logs/bcftools_thin_scatter/{bcf_id}/thin_{thin_int}_{thin_start}/sections/{scaff_grp}.log"
+		"results/logs/bcf_thin_scatter/{bcf_id}/thin_{thin_int}_{thin_start}/sections/{scaff_grp}.log"
 	benchmark:
-		"results/benchmarks/bcftools_thin_scatter/{bcf_id}/thin_{thin_int}_{thin_start}/sections/{scaff_grp}.bmk"
+		"results/benchmarks/bcf_thin_scatter/{bcf_id}/thin_{thin_int}_{thin_start}/sections/{scaff_grp}.bmk"
 	shell:
 		" (          "
 		"    gunzip -c {input.pos} | awk -v thin_int={params.thin_int} -v thin_start={params.thin_start} -f workflow/scripts/thin_positions.awk > {output.pos} && "
@@ -30,7 +30,7 @@ rule bcftools_thin_scatter:
 
 
 
-rule bcftools_thin_gather:
+rule bcf_thin_gather:
 	input:
 		bcfs=lambda wc: expand("results/bcf/{{bcf_id}}/thin_{{thin_int}}_{{thin_start}}/sections/{sg}.bcf", sg=all_scaff_group_ids(wc)),
 		poses=lambda wc: expand("results/bcf/{{bcf_id}}/thin_{{thin_int}}_{{thin_start}}/sections/{sg}.positions.tsv", sg=all_scaff_group_ids(wc)),
@@ -50,9 +50,9 @@ rule bcftools_thin_gather:
 	conda:
 		"../envs/bcftools.yaml"
 	log:
-		"results/logs/bcftools_thin_gather/{bcf_id}/thin_{thin_int}_{thin_start}/main.log"
+		"results/logs/bcf_thin_gather/{bcf_id}/thin_{thin_int}_{thin_start}/main.log"
 	benchmark:
-		"results/benchmarks/bcftools_thin_gather/{bcf_id}/thin_{thin_int}_{thin_start}/main.bmk"
+		"results/benchmarks/bcf_thin_gather/{bcf_id}/thin_{thin_int}_{thin_start}/main.bmk"
 	shell:
 		"( bcftools concat --naive {input.bcfs} > {output.bcf}     && "
 		"  bcftools index {output.bcf}                             && "

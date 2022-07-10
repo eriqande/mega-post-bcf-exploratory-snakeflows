@@ -4,6 +4,7 @@ import pandas as pd
 from snakemake.utils import validate
 
 
+
 bcf_table = pd.read_table(config["bcf_tsv"]).set_index("id", drop=False)
 validate(bcf_table, schema="../schemas/bcf_tsv.schema.yaml")
 
@@ -73,5 +74,5 @@ def all_scaff_group_ids(wildcards):
 ## Wilcard constraints.
 # thin_int and thin_start must be integers greater than 0
 wildcard_constraints:
-	thin_int="[1-9][0-9]*",
-	thin_start="[1-9][0-9]*"
+	thin_int="[0-9]+",
+	thin_start="[0-9]+"

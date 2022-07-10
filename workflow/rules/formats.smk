@@ -3,36 +3,61 @@
 
 
 
-rule beagle3_glikes_from_PL_scattered:
+# makes beagle GL file from the PL field in BCF file
+rule bcf2beagle_gl_scatter:
 	input:
-		bcf=bcf_from_ID,
-		csi=bcf_csi_from_ID,
-		regions="results/bcf_{bcf_file}/bcf_region_files/{scaff_grp}.tsv"
-	params:
-		sfile=sample_subset_file,
-		bcfopts=get_bcftools_opts
+		bcf="results/bcf/{bcf_id}/thin_{thin_int}_{thin_start}/main.bcf",
+		csi="results/bcf/{bcf_id}/thin_{thin_int}_{thin_start}/main.bcf.csi",
+		regions="results/bcf/{bcf_id}/scaff_members/{scaff_grp}.scaff_members.tsv",
+		sfile="results/bcf/{bcf_id}/thin_{thin_int}_{thin_start}/info/samples.txt"
 	output:
-		top_row="results/bcf_{bcf_file}/thin_{thin_int}_{thin_start}/samp-sub_{sample_subset}/bcft-opts_{bcftools_opts}/beagle-gl/sections/{scaff_grp}.toprow.gz",
-		body="results/bcf_{bcf_file}/thin_{thin_int}_{thin_start}/samp-sub_{sample_subset}/bcft-opts_{bcftools_opts}/beagle-gl/sections/{scaff_grp}.body.gz"
+		body=temp("results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/sections/{scaff_grp}.body.gz"),
+		top_row=temp("results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/sections/{scaff_grp}.toprow.gz"),
 	log:
-		"results/logs/beagle3_glikes_from_PL_scattered/bcf_{bcf_file}/thin_{thin_int}_{thin_start}/samp-sub_{sample_subset}/bcft-opts_{bcftools_opts}/sections/{scaff_grp}.log"
+		"results/logs/bcf2beagle_gl_scatter/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/{scaff_grp}.log"
+	benchmark:
+		"results/benchmarks/bcf2beagle_gl_scatter/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/{scaff_grp}.bmk"
 	conda:
 		"../envs/bcftools.yaml"
 	shell:
-		" (bcftools query -S {params.sfile} -l {input.bcf} | " 
-		" awk -f workflow/scripts/beagle3header.awk  | gzip -c > {output.top_row}) 2> {log}; "
-		"        "
-		" (bcftools view -Ou {params.bcfopts} -S {params.sfile} -R {input.regions} {input.bcf} |  "
-		" bcftools query -f '%CHROM:%POS\\t%REF\\t%ALT[\\t%PL]\\n' | "
-		" awk -f workflow/scripts/pl2gl.awk | gzip -c  >  {output.body}) 2>> {log} "
+		" (           " 
+		"    awk -f workflow/scripts/beagle3header.awk {input.sfile} | gzip -c > {output.top_row}  && "
+		"    bcftools view -Ou -R {input.regions} {input.bcf} |  "
+		"    bcftools query -f '%CHROM:%POS\\t%REF\\t%ALT[\\t%PL]\\n' | "
+		"    awk -f workflow/scripts/pl2gl.awk | gzip -c  >  {output.body} " 
+		" ) 2> {log}  "
 
 
 
-rule gather_beagle3_glikes_from_PL:
+rule bcf2beagle_gl_gather:
 	input: 
-		header=lambda wc: expand("results/bcf_{{bcf_file}}/thin_{{thin_int}}_{{thin_start}}/samp-sub_{{sample_subset}}/bcft-opts_{{bcftools_opts}}/beagle-gl/sections/{sg}.toprow.gz", sg=first_scaff_group_id(wc)),
-		scaff_gzs = lambda wc: expand("results/bcf_{{bcf_file}}/thin_{{thin_int}}_{{thin_start}}/samp-sub_{{sample_subset}}/bcft-opts_{{bcftools_opts}}/beagle-gl/sections/{sg}.body.gz", sg=all_scaff_group_ids(wc))
+		header=lambda wc: expand("results/beagle-gl/{{bcf_id}}/thin_{{thin_int}}_{{thin_start}}/sections/{sg}.toprow.gz", sg=first_scaff_group_id(wc)),
+		scaff_gzs = lambda wc: expand("results/beagle-gl/{{bcf_id}}/thin_{{thin_int}}_{{thin_start}}/sections/{sg}.body.gz", sg=all_scaff_group_ids(wc))
 	output:
-		"results/bcf_{bcf_file}/thin_{thin_int}_{thin_start}/samp-sub_{sample_subset}/bcft-opts_{bcftools_opts}/beagle-gl/all-scaffs.gz"
+		"results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/beagle-gl.gz"
+	log:
+		"results/logs/bcf2beagle_gl_gather/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/main.log"
+	benchmark:
+		"results/logs/bcf2beagle_gl_gather/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/main.bmk"
 	shell:
-		"cat {input.header} {input.scaff_gzs} > {output}"
+		"cat {input.header} {input.scaff_gzs} > {output} 2> {log} "
+
+
+
+
+# this one pastes the gzipped top row and gzipped body together
+# to make a whole beagle gl file.  It is putting a header on it, so
+# we call it capitating.
+rule capitate_beagle_gl_sections:
+	input: 
+		body="results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/sections/{scaff_grp}.body.gz",
+		top_row="results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/sections/{scaff_grp}.toprow.gz",
+	output:
+		beag="results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/sections/{scaff_grp}.beagle-gl.gz",
+	log:
+		"results/logs/capitate_beagle_gl_sections/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/{scaff_grp}.log"
+	benchmark:
+		"results/benchmarks/capitate_beagle_gl_sections/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/{scaff_grp}.bmk"
+	shell:
+		"cat {input.top_row} {input.body} > {output.beag} 2> {log} "
+

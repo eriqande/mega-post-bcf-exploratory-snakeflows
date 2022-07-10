@@ -159,6 +159,35 @@ write_tsv(both, ".test/bcf/test.bcf.scaff_groups.tsv")
 ### beagle3_glikes
 
 
+### pcangsd environment
 
+This is just a not here that pcangsd on github comes with 
+`environment.yaml` which looks like this:
+```yaml
+name: pcangsd
+channels:
+    - defaults
+dependencies:
+    - python>=3.6
+    - numpy
+    - scipy
+    - cython
+```
+If you create that environment and then activate it and run:
+```sh
+git clone https://github.com/Rosemeis/pcangsd.git
+cd pcangsd
+python setup.py build_ext --inplace
+pip3 install -e .
+```
+as directed on the github page, it installs pcangsd into the
+the conda environment that was created.  So, we should be able
+to have a flag dependency for each of the rules using pcangsd
+that does those steps to prepare the environment, and then we
+should be able to use it just as we would any other snakemake
+rule-specific environment.
+
+I might want to make sure it is using the same python version as
+the enclosing snakemake environment...
 
 

@@ -1,7 +1,7 @@
 
 
 
-rule bcftools_subsamp_and_filt_scatter:
+rule bcf_samps_and_filt_scatter:
 	input:
 		bcf=get_parent_bcf_from_id,
 		samps=get_sample_subset_path,
@@ -10,16 +10,16 @@ rule bcftools_subsamp_and_filt_scatter:
 		bcftools_opts=get_bcftools_opts,
 		sg="{scaff_grp}"
 	output:
-		scaff_members=temp("results/bcf/{bcf_id}/thin_0_0/sections/{scaff_grp}.scaff_members.tsv"),
+		scaff_members="results/bcf/{bcf_id}/scaff_members/{scaff_grp}.scaff_members.tsv",
 		bcf=temp("results/bcf/{bcf_id}/thin_0_0/sections/{scaff_grp}.bcf"),
 		stats=temp("results/bcf/{bcf_id}/thin_0_0/sections/{scaff_grp}.bcf_stats.txt"),
 		pos="results/bcf/{bcf_id}/thin_0_0/sections/{scaff_grp}.positions.tsv.gz",
 	conda:
 		"../envs/bcftools.yaml"
 	log:
-		"results/logs/bcftools_subsamp_and_filt_scatter/{bcf_id}/sections/{scaff_grp}.log"
+		"results/logs/bcf_samps_and_filt_scatter/{bcf_id}/sections/{scaff_grp}.log"
 	benchmark:
-		"results/benchmarks/bcftools_subsamp_and_filt_scatter/{bcf_id}/sections/{scaff_grp}.bmk"
+		"results/benchmarks/bcf_samps_and_filt_scatter/{bcf_id}/sections/{scaff_grp}.bmk"
 	shell:
 		" (awk -v sg='{params.sg}' -f workflow/scripts/get_scaff_members.awk {input.scaff_grp_path} > {output.scaff_members} && "
 		"    bcftools view -Ou -R {output.scaff_members} -S {input.samps} {input.bcf} | "
@@ -31,7 +31,7 @@ rule bcftools_subsamp_and_filt_scatter:
 
 
 
-rule bcftools_subsamp_and_filt_gather:
+rule bcf_samps_and_filt_gather:
 	input:
 		bcfs=lambda wc: expand("results/bcf/{{bcf_id}}/thin_0_0/sections/{sg}.bcf", sg=all_scaff_group_ids(wc)),
 		poses=lambda wc: expand("results/bcf/{{bcf_id}}/thin_0_0/sections/{sg}.positions.tsv.gz", sg=all_scaff_group_ids(wc)),
@@ -51,9 +51,9 @@ rule bcftools_subsamp_and_filt_gather:
 	conda:
 		"../envs/bcftools.yaml"
 	log:
-		"results/logs/bcftools_subsamp_and_filt_gather/{bcf_id}/main.log"
+		"results/logs/bcf_samps_and_filt_gather/{bcf_id}/main.log"
 	benchmark:
-		"results/benchmarks/bcftools_subsamp_and_filt_gather/{bcf_id}/main.bmk"
+		"results/benchmarks/bcf_samps_and_filt_gather/{bcf_id}/main.bmk"
 	shell:
 		"( bcftools concat --naive {input.bcfs} > {output.bcf} && "
 		"  bcftools index {output.bcf} && "
