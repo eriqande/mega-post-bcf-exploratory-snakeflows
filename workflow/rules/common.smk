@@ -24,11 +24,6 @@ def get_sample_subset_path(wildcards):
 #unique_scaff_groups = list(scaffold_groups.id.unique())
 
 
-bcftools_opts_table = pd.read_table(config["bcftools_opts"]).set_index("id", drop=False)
-validate(bcftools_opts_table, schema="../schemas/bcftools_opts.schema.yaml")
-
-
-
 
 def bcf_csi_from_ID(wildcards):
 	return "{path}.csi".format(path = bcf_table.loc[ wildcards.bcf_file, "bcf_path" ])
