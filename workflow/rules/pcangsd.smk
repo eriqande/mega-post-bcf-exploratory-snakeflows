@@ -28,10 +28,10 @@ rule install_pcangsd:
 # conda environment, and have the flagfile as an input
 # depenency to ensure that pcangsd has already been successfully
 # built into that conda env.
-# the active conda env.
+# the active conda env.  Yep! That works nicely.
 rule print_pcangsd_message:
 	input:  
-		flagfile=touch("results/flags/pcangsd_installed")
+		flagfile="results/flags/pcangsd_installed"
 	output:
 		"Just-A-Test-File.txt"
 	conda:
