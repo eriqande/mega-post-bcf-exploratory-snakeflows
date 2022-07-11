@@ -14,5 +14,5 @@ include: "rules/common.smk"
 
 include: "rules/bcftools_filter.smk"
 include: "rules/bcftools_thin.smk"
-#include: "rules/regions.smk"
 include: "rules/formats.smk"
+include: "rules/pcangsd.smk"

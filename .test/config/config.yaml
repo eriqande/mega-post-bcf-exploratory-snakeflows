@@ -12,3 +12,7 @@ samp_subs_dir: ".test/config/sample_subsets"
 # a column opts which is a string of options used for filtering.
 # Accessed via the wildcard {bcftools_opts}
 bcftools_opts: ".test/config/bcftools_opts.tsv"
+
+
+# the github commit of the version of pcangsd to be used
+pcangsd_version: 0f06e368e491254e470e1d8d3e17ab628151d343
