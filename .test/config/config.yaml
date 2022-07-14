@@ -15,4 +15,6 @@ bcftools_opts: ".test/config/bcftools_opts.tsv"
 
 
 # the github commit of the version of pcangsd to be used
-pcangsd_version: 0f06e368e491254e470e1d8d3e17ab628151d343
+pcangsd_url: git@github.com:eriqande/pcangsd.git
+pcangsd_version: 1af0f9de448c924324f48d5341be361d6eced0ec
+
