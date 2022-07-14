@@ -46,5 +46,9 @@ rule pcangsd_with_gposts:
 	log:
 		"results/logs/pcangsd_with_gposts/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/log.txt"
 	shell:
-		"OUTPRE=$(dirname {output.cov})/out && "
+		"OUTPRE=$(dirname {output.gposts})/out && "
 		"pcangsd -b {input.beagle} --minMaf 0.0 -t {threads} --post_save --out $OUTPRE > {log} 2>&1 "
+
+
+
+
