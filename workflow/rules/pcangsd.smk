@@ -38,8 +38,8 @@ rule pcangsd_with_gposts:
 		flagfile="results/flags/pcangsd_installed",
 		beagle="results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/beagle-gl.gz"
 	output:
-		#cov="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/out.cov",
-		gposts="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/out.gposts.tsv"
+		cov="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/out.cov",
+		gposts="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/out.gpost.tsv"
 	conda:
 		"../envs/pcangsd.yaml"
 	threads: 20
