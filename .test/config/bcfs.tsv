@@ -1,4 +1,4 @@
 id	parent_bcf_path	sample_subset_path	bcftools_opts	scaff_group_path	genome_path
 TEST-Biallelic-SNPS-5-fish-maf-0.1	.test/bcf/test.bcf	.test/config/sample_subsets/fish5.txt	-v snps -m 2 -M 2 -i 'FILTER="PASS" & MAF >= 0.1'	.test/bcf/test.bcf.scaff_groups.tsv	resources/test.bcf.genome.fasta
-TEST-Biallelic-SNPS-460-fish-maf-0.05	.test/bcf/test.bcf	.test/config/sample_subsets/yc454.txt	-v snps -m 2 -M 2 -i 'FILTER="PASS" & MAF >= 0.05'	.test/bcf/test.bcf.scaff_groups.tsv	resources/test.bcf.genome.fasta
-TEST-Biallelic-SNPS-30-fish-maf-0.05	.test/bcf/test.bcf	.test/config/sample_subsets/yc30.txt	-v snps -m 2 -M 2 -i 'FILTER="PASS" & MAF >= 0.05'	.test/bcf/test.bcf.scaff_groups.tsv	resources/test.bcf.genome.fasta
+TEST-Biallelic-SNPS-460-fish-maf-0.05	.test/bcf/test.bcf	.test/config/sample_subsets/yc454.txt	-v snps -m 2 -M 2 -i 'FILTER="PASS" & MAF >= 0.05 & F_MISSING < 0.5'	.test/bcf/test.bcf.scaff_groups.tsv	resources/test.bcf.genome.fasta
+TEST-Biallelic-SNPS-30-fish-maf-0.05	.test/bcf/test.bcf	.test/config/sample_subsets/yc30.txt	-v snps -m 2 -M 2 -i 'FILTER="PASS" & MAF >= 0.05 & F_MISSING < 0.5'	.test/bcf/test.bcf.scaff_groups.tsv	resources/test.bcf.genome.fasta

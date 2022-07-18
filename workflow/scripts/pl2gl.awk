@@ -11,10 +11,10 @@
 
 BEGIN {
 	IFS="\t"
-	base2int["A"] = 1
-	base2int["C"] = 2
-	base2int["G"] = 3
-	base2int["T"] = 4
+	base2int["A"] = 0
+	base2int["C"] = 1
+	base2int["G"] = 2
+	base2int["T"] = 3
 }
 
 {
@@ -29,7 +29,7 @@ BEGIN {
 		y=10^(-a[2]/10);
 		z=10^(-a[3]/10); 
 		sum=x+y+z; 
-		printf("\t%e\t%e\t%e",x/sum, y/sum,z/sum); 
+		printf("\t%.6f\t%.6f\t%.6f",x/sum, y/sum,z/sum); 
 	} 
 	printf("\n");
 }
