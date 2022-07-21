@@ -1,0 +1,40 @@
+---
+title: "Comparing the genotype likelihoods and the posteriors"
+output: html_notebook
+---
+
+Now that I have this running via pcangsd, I best ensure the results look about right.
+
+```{r}
+library(tidyverse)
+
+gl <- read_tsv("beagle-gl.gz", name_repair = "minimal")
+names(gl)[-(1:3)] <- str_c(names(gl)[-(1:3)], "-", 0:2)
+
+post <- read_tsv("beagle-post.gz", name_repair = "minimal")
+names(post)[-(1:3)] <- str_c(names(post)[-(1:3)], "-", 0:2)
+
+
+gl2 <- gl %>% 
+  pivot_longer(cols = starts_with("T"), names_to = c("fish", "geno"), names_sep = "-")
+
+post2 <- post %>% 
+  pivot_longer(cols = starts_with("T"), names_to = c("fish", "geno"), names_sep = "-")
+
+
+togeth <- left_join(post2, gl2, by = c("marker", "fish", "geno")) %>%
+  rename(post = value.x, gl = value.y)
+```
+
+Now we can just plot them all:
+```{r}
+ggplot(togeth, aes(x = gl, y = post, colour = geno)) + 
+  geom_jitter(alpha = 0.1, width = 0.03) +
+  geom_abline(slope = 1, intercept = 0) +
+  facet_wrap(~geno, ncol = 1)
+```
+
+That seems about what it should look like.
+
+Cool!
+
