@@ -66,6 +66,8 @@ rule pcangsd_beagle_post_bung:
 	output:
 		beagle_posts="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle-post.gz",
 		beagle_header="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle_header"
+	log:
+		"results/logs/pcangsd_with_gposts/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/pcangsd_beagle_post_bung/log.txt"
 	shell:
 		" (gunzip -c {input.beagle} | head -n 1 > {output.beagle_header} 2> {log})  && "
 		" (gunzip -c {input.beagle}  | awk 'BEGIN {{OFS=\"\\t\"}} NR>1 {{print $1, $2, $3}}'  | "
