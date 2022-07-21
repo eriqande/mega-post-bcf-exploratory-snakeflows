@@ -18,7 +18,10 @@ BEGIN {
 }
 
 {
-	printf("%s\t%s\t%s", $1, base2int[$2], base2int[$3]); 
+	chrompos=$1
+	gsub(/_/, "-", chrompos)
+	gsub(/:/, "_", chrompos)
+	printf("%s\t%s\t%s", chrompos, base2int[$2], base2int[$3]); 
 	for(i=4;i<=NF;i++) {
 		n=split($i,a,/,/); 
 		if(n!=3) {

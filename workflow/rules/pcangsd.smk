@@ -37,17 +37,19 @@ rule pcangsd_with_gposts:
 	input:  
 		flagfile="results/flags/pcangsd_installed",
 		beagle="results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/beagle-gl.gz"
+	params: 
+		minMaf = "{min_maf}"
 	output:
-		cov="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/out.cov",
-		gposts="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/out.gpost.tsv"
+		cov="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.cov",
+		gposts="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.gpost.tsv"
 	conda:
 		"../envs/pcangsd.yaml"
 	threads: 20
 	log:
-		"results/logs/pcangsd_with_gposts/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/log.txt"
+		"results/logs/pcangsd_with_gposts/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/log.txt"
 	shell:
 		"OUTPRE=$(dirname {output.gposts})/out && "
-		"pcangsd -b {input.beagle} --minMaf 0.0 -t {threads} --post_save --out $OUTPRE > {log} 2>&1 "
+		"pcangsd -b {input.beagle} --minMaf {params.minMaf} -t {threads} --post_save --out $OUTPRE > {log} 2>&1 "
 
 
 
