@@ -56,10 +56,10 @@ rule pcangsd_with_gposts:
 	shell:
 		" (OUTPRE=$(dirname {output.gposts})/out && "
 		" pcangsd -b {input.beagle} --minMaf {params.minMaf} -t {threads} --post_save --maf_save --sites_save --out $OUTPRE > {log.pcangsd} 2>&1) && "
-		" (gunzip -c {input.beagle} | head -n 1 > {output.beagle_header} && "
-		" gunzip -c {input.beagle} | awk 'BEGIN {{OFS=\"\\t\"}} NR>1 {{print $1, $2, $3}}' | "
-		" paste {output.sites} - | awk 'BEGIN {{OFS=\"\\t\"}} $1==1 {{print $2, $3, $4}}' | "
-		" paste - {output.gposts} | cat {output.beagle_header} - | gzip - >  {output.beagle_posts}) 2> {log.beagle} "
+		" gunzip -c {input.beagle} 2> {log.beagle} | head -n 1 > {output.beagle_header} 2>> {log.beagle} && "
+		" gunzip -c {input.beagle} 2>> {log.beagle} | awk 'BEGIN {{OFS=\"\\t\"}} NR>1 {{print $1, $2, $3}}' 2>> {log.beagle} | "
+		" paste {output.sites} - 2>> {log.beagle} | awk 'BEGIN {{OFS=\"\\t\"}} $1==1 {{print $2, $3, $4}}' 2>> {log.beagle} | "
+		" paste - {output.gposts} 2>> {log.beagle} | cat {output.beagle_header} - 2>> {log.beagle} | gzip - >  {output.beagle_posts} 2>> {log.beagle} "
 
 
 
