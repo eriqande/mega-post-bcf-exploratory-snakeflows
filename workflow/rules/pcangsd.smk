@@ -58,8 +58,8 @@ rule pcangsd_with_gposts:
 		" pcangsd -b {input.beagle} --minMaf {params.minMaf} -t {threads} --post_save --maf_save --sites_save --out $OUTPRE > {log.pcangsd} 2>&1) && "
 		" (gunzip -c {input.beagle} | head -n 1 > {output.beagle_header} && "
 		" gunzip -c {input.beagle} | awk 'BEGIN {{OFS=\"\\t\"}} NR>1 {{print $1, $2, $3}}' | "
-		" paste out.sites - | awk 'BEGIN {{OFS=\"\\t\"}} $1==1 {{print $2, $3, $4}}' | "
-		" paste - out.gpost.tsv | cat {output.beagle_header} - | gzip - >  {output.beagle_posts}) 2> {log.beagle} "
+		" paste {output.sites} - | awk 'BEGIN {{OFS=\"\\t\"}} $1==1 {{print $2, $3, $4}}' | "
+		" paste - {output.gposts} | cat {output.beagle_header} - | gzip - >  {output.beagle_posts}) 2> {log.beagle} "
 
 
 
