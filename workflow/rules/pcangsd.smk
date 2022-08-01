@@ -98,4 +98,4 @@ rule pcangsd_beagle_post_slice:
 		" (gunzip -c {input.beagle}  | awk 'BEGIN {{OFS=\"\\t\"}} NR>1 {{print $1, $2, $3}}'  | "
 		" paste {input.sites} - | awk 'BEGIN {{OFS=\"\\t\"}} $1==1 {{print $2, $3, $4}}' | "
 		" paste - {input.gposts} | cat {input.scaff_grp_path} {output.beagle_header} - | "
-		" awk -v path=\"$(dirname {input.beagle})\" -v ext=post -f workflow/scripts/beagle-slicer.awk  >  {log} 2>&1 ) "
+		" awk -v path=\"$(dirname {output.beagle_header})/sections\" -v ext=post -f workflow/scripts/beagle-slicer.awk  >>  {log} 2>&1 ) "

@@ -42,6 +42,9 @@ go == 1 {
 
 	filep = path "/" sg[a[1]] "-beagle-" ext ".gz"
 	gzp = "gzip > " filep
+
+	print a[1], sg[a[1]], gzp
+
 	if(f == 0) {
 		op = filep
 		print header | gzp
