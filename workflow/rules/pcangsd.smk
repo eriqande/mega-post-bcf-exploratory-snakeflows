@@ -89,6 +89,7 @@ rule pcangsd_beagle_post_slice:
 		scaff_grp_path=get_scaff_group_file_for_bcf
 	output:
 		beagle_sections=expand("results/pcangsd/{{bcf_id}}/thin_{{thin_int}}_{{thin_start}}/maf_{{min_maf}}/sections/{asg}-beagle-post.gz", asg = unique_scaff_groups),
+		beagle_header="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle_header"
 	log:
 		"results/logs/pcangsd_beagle_post_slice/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/log.txt"
 	shell:

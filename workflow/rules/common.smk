@@ -78,6 +78,6 @@ wildcard_constraints:
 ## This is a total hack that I am doing to get some results for the
 ## Yukon Chinook before revamping all of this so that the BCF and all the associated
 ## files are set in the config
-stable = pd.read_table(".test/bcf.scaff_groups.tsv").set_index("id", drop=False)
+stable = pd.read_table(".test/bcf/test.bcf.scaff_groups.tsv").set_index("id", drop=False)
 unique_scaff_groups = list(stable.id.unique())
 
