@@ -62,7 +62,7 @@ rule pcangsd_beagle_post_bung:
 	input:
 		beagle="results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/beagle-gl.gz",
 		gposts="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.gpost.tsv",
-		sites="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.sites"
+		sites="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.sites",
 	output:
 		beagle_posts="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle-post.gz",
 		beagle_header="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle_header"
@@ -74,3 +74,26 @@ rule pcangsd_beagle_post_bung:
 		" paste {input.sites} - | awk 'BEGIN {{OFS=\"\\t\"}} $1==1 {{print $2, $3, $4}}' | "
 		" paste - {input.gposts} | cat {output.beagle_header} - | gzip - >  {output.beagle_posts} 2>> {log}) "
 
+
+
+
+# this version of it takes the final beagle posterior output, and, instead of
+# gzipping it, we run it through an awk script that breaks it out into
+# a bunch of separate NON-GZIPPED beagle files, one for each scaffold group.
+# The idea behind this is that we can then scatter angsd doAsso over scaffold groups.
+rule pcangsd_beagle_post_slice:
+	input:
+		beagle="results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/beagle-gl.gz",
+		gposts="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.gpost.tsv",
+		sites="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.sites",
+		scaff_grp_path=get_scaff_group_file_for_bcf
+	output:
+		beagle_sections=expand("results/pcangsd/{{bcf_id}}/thin_{{thin_int}}_{{thin_start}}/maf_{{min_maf}}/sections/{asg}-beagle-post.gz", asg = unique_scaff_groups),
+	log:
+		"results/logs/pcangsd_beagle_post_slice/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/log.txt"
+	shell:
+		" set +o pipefail; (gunzip -c {input.beagle} | awk 'NR==1 {{print; exit 0}}' > {output.beagle_header} 2> {log})  && "
+		" (gunzip -c {input.beagle}  | awk 'BEGIN {{OFS=\"\\t\"}} NR>1 {{print $1, $2, $3}}'  | "
+		" paste {input.sites} - | awk 'BEGIN {{OFS=\"\\t\"}} $1==1 {{print $2, $3, $4}}' | "
+		" paste - {input.gposts} | cat {input.scaff_grp_path} {output.beagle_header} - | "
+		" awk -v path=\"$(dirname {input.beagle})\" -v ext=post -f workflow/scripts/beagle-slicer.awk  >  {log} 2>&1 ) "

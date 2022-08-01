@@ -48,7 +48,7 @@ def return_scaffold_groups_table(wildcards):
 	scaffold_groups = pd.read_table(sg_file).set_index("id", drop=False)
 	# ensure that column order is correct
 	scaff_cols = list(scaffold_groups.columns)
-	if scaff_cols[0] != 'id' or scaff_cols[1] != 'chrom' or scaff_cols[2] != 'start' or scaff_cols[3] != 'stop': 
+	if scaff_cols[0] != 'id' or scaff_cols[1] != 'chrom' or scaff_cols[2] != 'start' or scaff_cols[3] != 'stop' or scaff_cols[4] != "angsd_chrom": 
 		raise Exception("Column order is important in the scaffold_groups file.  The columns must be id, chrom, start, stop, in that order.")
 	return(scaffold_groups)
 
@@ -71,3 +71,13 @@ def all_scaff_group_ids(wildcards):
 wildcard_constraints:
 	thin_int="[0-9]+",
 	thin_start="[0-9]+"
+
+
+
+
+## This is a total hack that I am doing to get some results for the
+## Yukon Chinook before revamping all of this so that the BCF and all the associated
+## files are set in the config
+stable = pd.read_table(".test/bcf.scaff_groups.tsv").set_index("id", drop=False)
+unique_scaff_groups = list(stable.id.unique())
+
