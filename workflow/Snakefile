@@ -17,3 +17,8 @@ include: "rules/bcftools_thin.smk"
 include: "rules/formats.smk"
 include: "rules/pcangsd.smk"
 include: "rules/angsd.smk"
+
+
+
+rule all:
+	expand("results/do_asso/Mondo-454-fish-maf-0.05/thin_6_1/maf_0.05/sections/{sg}.lrt0.gz", sg=unique_scaff_groups)
