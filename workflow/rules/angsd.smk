@@ -14,6 +14,8 @@ rule angsd_do_asso_single:
 		what=" -doAsso 4 "
 	log:
 		"results/logs/do_asso/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/sections/{scaff_grp}.log"
+	conda:
+		"../envs/angsd.yaml"
 	output:
 		 arg="results/do_asso/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/sections/{scaff_grp}.arg",
 		 lrt="results/do_asso/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/sections/{scaff_grp}.lrt.gz"
