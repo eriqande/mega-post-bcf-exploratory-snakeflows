@@ -92,6 +92,7 @@ rule pcangsd_beagle_post_slice:
 		beagle_header="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle_header"
 	log:
 		"results/logs/pcangsd_beagle_post_slice/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/log.txt"
+	threads: 4
 	shell:
 		" set +o pipefail; (gunzip -c {input.beagle} | awk 'NR==1 {{print; exit 0}}' > {output.beagle_header} 2> {log})  && "
 		" (gunzip -c {input.beagle}  | awk 'BEGIN {{OFS=\"\\t\"}} NR>1 {{print $1, $2, $3}}'  | "
