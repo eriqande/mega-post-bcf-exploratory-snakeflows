@@ -108,10 +108,10 @@ rule pcangsd_beagle_post_slice:
 # This was for one-off use at one point...
 rule extract_sites_from_beagle_posts:
 	input:
-		beag="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/sections/scaff_group_{sgn}-beagle-post.gz",
-		extr="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/extracto/scaff_group_{sgn}.txt",
+		beag="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/sections/scaff_grp_{sgn}-beagle-post.gz",
+		extr="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/extracto/scaff_grp_{sgn}.txt",
 	output:
-		extd="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/extracted/scaff_group_{sgn}-beag-posts.tsv",
+		extd="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/extracted/scaff_grp_{sgn}-beag-posts.tsv",
 	shell:
 		" zcat {input.beag} | cat {input.extr} - | "
 		" awk ' "
@@ -119,6 +119,7 @@ rule extract_sites_from_beagle_posts:
 		"    NF==1 {{sg[$1]++; n++; next}} "
 		"    /marker/ {{print; next}}  "
 		"    $1 in sg {{print; m++; if(m==n) exit 0}} ' > {output.extd} "
+
 
 
 
