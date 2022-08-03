@@ -8,7 +8,7 @@ rule angsd_do_asso_single:
 		sampleFile=".test/config/dot_samples3.tsv"
 	params:
 		sg="{scaff_grp}",
-		whichCov="sex,PC1,PC2,PC3,PC4",
+		whichCov="sex,PC1,PC2,PC3,PC4,PC5,PC6,PC7,PC8,PC9,PC10,PC11,PC12",
 		whichPhe=" age ",
 		doMaf=" -doMaf 4 ",
 		what=" -doAsso 4 "
