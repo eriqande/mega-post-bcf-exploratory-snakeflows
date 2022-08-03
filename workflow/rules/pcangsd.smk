@@ -99,3 +99,46 @@ rule pcangsd_beagle_post_slice:
 		" paste {input.sites} - | awk 'BEGIN {{OFS=\"\\t\"}} $1==1 {{print $2, $3, $4}}' | "
 		" paste - {input.gposts} | cat {input.scaff_grp_path} {output.beagle_header} - | "
 		" awk -v path=\"$(dirname {output.beagle_header})/sections\" -v ext=post -f workflow/scripts/beagle-slicer.awk  >>  {log} 2>&1 ) "
+
+
+
+
+
+# this is just a quick rule to extract sites from the beagle-post files
+# This was for one-off use at one point...
+rule extract_sites_from_beagle_posts:
+	input:
+		beag="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/sections/scaff_group_{sgn}-beagle-post.gz",
+		extr="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/extracto/scaff_group_{sgn}.txt",
+	output:
+		extd="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/extracted/scaff_group_{sgn}-beag-posts.tsv",
+	shell:
+		" zcat {input.beag} | cat {input.extr} - | "
+		" awk ' "
+		"    BEGIN {{OFS=\"\t\"}} "
+		"    NF==1 {{sg[$1]++; n++; next}} "
+		"    /marker/ {{print; next}}  "
+		"    $1 in sg {{print; m++; if(m==n) exit 0}} ' > {output.extd} "
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
