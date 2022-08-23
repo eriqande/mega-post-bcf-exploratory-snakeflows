@@ -3,7 +3,7 @@
 
 rule angsd_do_asso_single:
 	input: 
-		beag="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/sections/{scaff_grp}-beagle-post.gz",
+		beag="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/sections/{scaff_grp}-beagle-post.gz",
 		fai=".test/config/angsd-names.fasta.fai",
 		sampleFile="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/dot_samples.tsv"
 	params:

@@ -5,21 +5,21 @@
 ruleorder:  bcf_samps_and_filt_scatter > bcf_thin_scatter
 ruleorder:  bcf_samps_and_filt_gather > bcf_thin_gather
 
-include: "rules/common.smk"
+include: "rules/common2.smk"
 
 #localrules: write_bcf_regions
 
 
-rule all:
-	input:
-		expand("results/do_asso/Mondo-454-fish-maf-0.05/thin_6_1/maf_0.05/sections/{sg}.lrt0.gz", sg=unique_scaff_groups)
+#rule all:
+#	input:
+#		expand("results/do_asso/Mondo-454-fish-maf-0.05/thin_6_1/maf_0.05/sections/{sg}.lrt0.gz", sg=unique_scaff_groups)
 
 
 include: "rules/bcftools_filter.smk"
 include: "rules/bcftools_thin.smk"
 include: "rules/formats.smk"
 include: "rules/pcangsd.smk"
-include: "rules/angsd.smk"
+#include: "rules/angsd.smk"
 
 
 

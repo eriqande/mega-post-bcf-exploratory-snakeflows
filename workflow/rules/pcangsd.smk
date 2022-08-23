@@ -6,8 +6,8 @@
 # the active conda env.
 rule install_pcangsd:
 	params:
-		hash=config["pcangsd_version"],
-		url=config["pcangsd_url"]
+		hash=config["pcangsd"]["version"],
+		url=config["pcangsd"]["url"]
 	output:  
 		flagfile=touch("results/flags/pcangsd_installed")
 	conda:
@@ -36,22 +36,22 @@ rule install_pcangsd:
 rule pcangsd_with_gposts:
 	input:  
 		flagfile="results/flags/pcangsd_installed",
-		beagle="results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/beagle-gl.gz"
+		beagle="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/beagle-gl/beagle-gl.gz"
 	params: 
 		minMaf = "{min_maf}"
 	output:
-		args="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.args",
-		cov="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.cov",
-		gposts="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.gpost.tsv",
-		mafs="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.maf.npy",
-		sites="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.sites"
+		args="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.args",
+		cov="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.cov",
+		gposts="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.gpost.tsv",
+		mafs="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.maf.npy",
+		sites="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.sites"
 		
 	conda:
 		"../envs/pcangsd.yaml"
 	threads: 20
 	log:
-		pcangsd="results/logs/pcangsd_with_gposts/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/pcangsd_part.txt",
-		beagle="results/logs/pcangsd_with_gposts/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle_paste_part.txt",
+		pcangsd="results/logs/pcangsd_with_gposts/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/pcangsd_part.txt",
+		beagle="results/logs/pcangsd_with_gposts/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle_paste_part.txt",
 	shell:
 		" (OUTPRE=$(dirname {output.gposts})/out && "
 		" pcangsd -b {input.beagle} --minMaf {params.minMaf} -t {threads} --post_save --maf_save --sites_save --out $OUTPRE > {log.pcangsd} 2>&1) "
@@ -60,14 +60,14 @@ rule pcangsd_with_gposts:
 
 rule pcangsd_beagle_post_bung:
 	input:
-		beagle="results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/beagle-gl.gz",
-		gposts="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.gpost.tsv",
-		sites="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.sites",
+		beagle="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/beagle-gl/beagle-gl.gz",
+		gposts="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.gpost.tsv",
+		sites="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.sites",
 	output:
-		beagle_posts="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle-post.gz",
-		beagle_header="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle_header"
+		beagle_posts="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/beagle-post.gz",
+		beagle_header="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/beagle_header"
 	log:
-		"results/logs/pcangsd_with_gposts/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/pcangsd_beagle_post_bung/log.txt"
+		"results/logs/pcangsd_beagle_post_bung/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/log.txt"
 	shell:
 		" set +o pipefail; (gunzip -c {input.beagle} | awk 'NR==1 {{print; exit 0}}' > {output.beagle_header} 2> {log})  && "
 		" (gunzip -c {input.beagle}  | awk 'BEGIN {{OFS=\"\\t\"}} NR>1 {{print $1, $2, $3}}'  | "
@@ -83,15 +83,15 @@ rule pcangsd_beagle_post_bung:
 # The idea behind this is that we can then scatter angsd doAsso over scaffold groups.
 rule pcangsd_beagle_post_slice:
 	input:
-		beagle="results/beagle-gl/{bcf_id}/thin_{thin_int}_{thin_start}/beagle-gl.gz",
-		gposts="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.gpost.tsv",
-		sites="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/out.sites",
-		scaff_grp_path=get_scaff_group_file_for_bcf
+		beagle="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/beagle-gl/beagle-gl.gz",
+		gposts="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.gpost.tsv",
+		sites="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.sites",
+		scaff_grp_path=get_scaff_group_path
 	output:
-		beagle_sections=expand("results/pcangsd/{{bcf_id}}/thin_{{thin_int}}_{{thin_start}}/maf_{{min_maf}}/sections/{asg}-beagle-post.gz", asg = unique_scaff_groups),
-		beagle_header="results/pcangsd/{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle_header"
+		beagle_sections=expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/pcangsd/maf_{{min_maf}}/sections/{asg}-beagle-post.gz", asg = unique_scaff_groups),
+		beagle_header="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/beagle_header"
 	log:
-		"results/logs/pcangsd_beagle_post_slice/bcf_{bcf_id}/thin_{thin_int}_{thin_start}/maf_{min_maf}/log.txt"
+		"results/logs/pcangsd_beagle_post_slice/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/log.txt"
 	threads: 4
 	shell:
 		" set +o pipefail; (gunzip -c {input.beagle} | awk 'NR==1 {{print; exit 0}}' > {output.beagle_header} 2> {log})  && "

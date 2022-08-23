@@ -1,23 +1,58 @@
-
-# a TSV giving paths of BCF files
-bcf_tsv: ".test/config/bcfs.tsv"
-
-# a directory that contains single-column files with a .txt extension
-# that give individuals in different groups.  They can be accessed
-# with the {sample_subset} wildcard
-samp_subs_dir: ".test/config/sample_subsets"
+## This is the config file that determnines what analyses will
+## be run on which sample subset from which parent BCF
 
 
-# a TSV file with a column id, that is the name of the set of options,
-# a column opts which is a string of options used for filtering.
-# Accessed via the wildcard {bcftools_opts}
-bcftools_opts: ".test/config/bcftools_opts.tsv"
+#### DEFINITIONS SECTIONS #####
+# this is the short name and the path to the BCF file that will be used
+# the key here (testy) corresponds to wildcard {bcf_id}.  To each
+# BCF file you need to have a genome_path and a scaff_group_path, and,
+# of course, the sample subsets should correspond to a particular
+# bcf file, so they go here.
+bcf:
+  testy:
+    path: ".test/bcf/test.bcf"
+    genome_path: resources/test.bcf.genome.fasta
+    scaff_group_path: .test/bcf/test.bcf.scaff_groups.tsv
+    sample_subsets:
+      yc30:
+        path: .test/config/sample_subsets/yc30.txt     # 30 of the Yukon Chinook
+      yc454:
+        path: .test/config/sample_subsets/yc454.txt   # all 454 Yukon River Chinook
+        dotsample: ".test/config/dot_samples3.tsv"
+      yc_males:
+        path: .test/config/sample_subsets/yc_males.txt  # just the males
+      yc_females:
+        path: .test/config/sample_subsets/yc_females.txt  # just the females
 
 
-# the github commit of the version of pcangsd to be used
-pcangsd_url: git@github.com:eriqande/pcangsd.git
-pcangsd_version: 705ca4c19630ed9c2dd254b0bfd528b8ee25d5c0
+
+# and now we can define any number of sample subsets that we want to
+# in the form of "nickname: path".  The nicknames/keys here correspond
+# to wildcard {sampsub}
 
 
 
-assoc_meta: ".test/config/dot_samples3.tsv"
+# same thing here, we can define different sets of bcftools filters
+# that we might want to use, and we give them nicknames. The 
+# nicknames/keys here correspond to wildcard 
+bcftools_opts:
+  snps05: -v snps -m 2 -M 2 -i 'FILTER="PASS" && MAF >= 0.05'
+
+
+
+#### ACTIONS SECTIONS ####
+
+# Down in this section, we can list what kind of analyses we
+# would like to be done, on which sets of samples and with which
+# bcftools filters, as defined in the definitions section.
+
+# In general, each of the types of analyses is defined by a separate
+# block which includes the parameter values specific to that analysis.
+
+# For the most part, these blocks are used to define targets that will
+# trigger the necessary workflow cascades.
+
+pcangsd:
+  url: git@github.com:eriqande/pcangsd.git
+  version: 705ca4c19630ed9c2dd254b0bfd528b8ee25d5c0
+
