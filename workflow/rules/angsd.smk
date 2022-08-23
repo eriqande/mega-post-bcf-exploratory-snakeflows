@@ -24,3 +24,6 @@ rule angsd_do_asso_single:
 		"  -sampleFile {input.sampleFile} -whichPhe {params.whichPhe} "
 		"  -whichCov {params.whichCov}  "
 		"  -out $(dirname {output.arg})/{wildcards.scaff_grp} {params.what} > {log} 2>&1 "
+
+
+
