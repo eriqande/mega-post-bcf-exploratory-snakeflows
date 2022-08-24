@@ -1,0 +1,64 @@
+## This is the config file that determnines what analyses will
+## be run on which sample subset from which parent BCF
+
+
+#### DEFINITIONS SECTIONS #####
+
+# every BCF file used here must correspond to the same
+# reference genome and thus to the same scaffold groups file.
+# These are identified here:
+fai_path: .test/resources/genome.fasta.fai
+scaff_group_path: .test/resources/scaffold_groups.tsv
+
+
+
+# this is the short name and the path to the BCF file that will be used
+# the key here (testy) corresponds to wildcard {bcf_id}.  The sample subsets
+# should, of course, correspond to a particular
+# bcf file, so they go here.  If there are meta data files for association
+# studies in ANGSD, these go here as the dotsample.
+bcf:
+  testy:
+    path: ".test/resources/100_fish.bcf"
+    sample_subsets:
+      all:
+        path: .test/sample_subsets/all-fish.txt     #  all 100 fish
+        dotsample: .test/data/dot-samples-all.tsv
+      males:
+        path: .test/sample_subsets/males.txt    # just the males
+        dotsample: .test/data/dot-samples-males.tsv
+      females:
+        path: .test/sample_subsets/females.txt  # just the females
+        dotsample: .test/data/dot-samples-females.tsv 
+
+
+# same thing here, we can define different sets of bcftools filters
+# that we might want to use, and we give them nicknames. The 
+# nicknames/keys here correspond to wildcard 
+bcftools_opts:
+  snps05: -v snps -m 2 -M 2 -i 'FILTER="PASS" && MAF >= 0.05'
+
+
+#### SETTING SECTIONS #####
+
+pcangsd:
+  url: git@github.com:eriqande/pcangsd.git
+  version: 705ca4c19630ed9c2dd254b0bfd528b8ee25d5c0
+
+
+
+
+#### ACTIONS SECTIONS ####
+
+# Down in this section, we can list what kind of analyses we
+# would like to be done, on which sets of samples and with which
+# bcftools filters, as defined in the definitions section.
+
+# In general, each of the types of analyses is defined by a separate
+# block which includes the parameter values specific to that analysis.
+
+# For the most part, these blocks are used to define targets that will
+# trigger the necessary workflow cascades.
+
+
+
