@@ -32,9 +32,9 @@ rule bcf_thin_scatter:
 
 rule bcf_thin_gather:
 	input:
-		bcfs=lambda wc: expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/sections/{sg}.bcf", sg=all_scaff_group_ids(wc)),
-		poses=lambda wc: expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/sections/{sg}.positions.tsv", sg=all_scaff_group_ids(wc)),
-		statses=lambda wc: expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/sections/{sg}.bcf_stats.txt", sg=all_scaff_group_ids(wc)),
+		bcfs=expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/sections/{sg}.bcf", sg=unique_scaff_groups),
+		poses=expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/sections/{sg}.positions.tsv", sg=unique_scaff_groups),
+		statses=expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/sections/{sg}.bcf_stats.txt", sg=unique_scaff_groups),
 	output:
 		bcf="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/main.bcf",
 		csi="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/main.bcf.csi",

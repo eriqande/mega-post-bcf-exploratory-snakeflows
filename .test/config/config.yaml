@@ -3,16 +3,23 @@
 
 
 #### DEFINITIONS SECTIONS #####
+
+# every BCF file used here must correspond to the same
+# reference genome and thus to the same scaffold groups file.
+# These are identified here:
+fai_path: .test/bcf/genome.fasta.fai
+scaff_group_path: .test/bcf/test.bcf.scaff_groups.tsv
+
+
+
 # this is the short name and the path to the BCF file that will be used
-# the key here (testy) corresponds to wildcard {bcf_id}.  To each
-# BCF file you need to have a genome_path and a scaff_group_path, and,
-# of course, the sample subsets should correspond to a particular
-# bcf file, so they go here.
+# the key here (testy) corresponds to wildcard {bcf_id}.  The sample subsets
+# should, of course, correspond to a particular
+# bcf file, so they go here.  If there are meta data files for association
+# studies in ANGSD, these go here as the dotsample.
 bcf:
   testy:
     path: ".test/bcf/test.bcf"
-    genome_path: resources/test.bcf.genome.fasta
-    scaff_group_path: .test/bcf/test.bcf.scaff_groups.tsv
     sample_subsets:
       yc30:
         path: .test/config/sample_subsets/yc30.txt     # 30 of the Yukon Chinook
@@ -25,18 +32,19 @@ bcf:
         path: .test/config/sample_subsets/yc_females.txt  # just the females
 
 
-
-# and now we can define any number of sample subsets that we want to
-# in the form of "nickname: path".  The nicknames/keys here correspond
-# to wildcard {sampsub}
-
-
-
 # same thing here, we can define different sets of bcftools filters
 # that we might want to use, and we give them nicknames. The 
 # nicknames/keys here correspond to wildcard 
 bcftools_opts:
   snps05: -v snps -m 2 -M 2 -i 'FILTER="PASS" && MAF >= 0.05'
+
+
+#### SETTING SECTIONS #####
+
+pcangsd:
+  url: git@github.com:eriqande/pcangsd.git
+  version: 705ca4c19630ed9c2dd254b0bfd528b8ee25d5c0
+
 
 
 
@@ -52,7 +60,5 @@ bcftools_opts:
 # For the most part, these blocks are used to define targets that will
 # trigger the necessary workflow cascades.
 
-pcangsd:
-  url: git@github.com:eriqande/pcangsd.git
-  version: 705ca4c19630ed9c2dd254b0bfd528b8ee25d5c0
+
 

@@ -33,9 +33,9 @@ rule bcf_samps_and_filt_scatter:
 
 rule bcf_samps_and_filt_gather:
 	input:
-		bcfs=lambda wc: expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_0_0/sections/{sg}.bcf", sg=all_scaff_group_ids(wc)),
-		poses=lambda wc: expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_0_0/sections/{sg}.positions.tsv.gz", sg=all_scaff_group_ids(wc)),
-		statses=lambda wc: expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_0_0/sections/{sg}.bcf_stats.txt", sg=all_scaff_group_ids(wc)),
+		bcfs=expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_0_0/sections/{sg}.bcf", sg=unique_scaff_groups),
+		poses=expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_0_0/sections/{sg}.positions.tsv.gz", sg=unique_scaff_groups),
+		statses=expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_0_0/sections/{sg}.bcf_stats.txt", sg=unique_scaff_groups),
 		samps_path=get_subsamp_path,
 		scaff_grp_path=get_scaff_group_path,
 	output:

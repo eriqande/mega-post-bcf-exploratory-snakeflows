@@ -34,8 +34,8 @@ rule bcf2beagle_gl_scatter:
 
 rule bcf2beagle_gl_gather:
 	input: 
-		header=lambda wc: expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/beagle-gl/sections/{sg}.toprow.gz", sg=first_scaff_group_id(wc)),
-		scaff_gzs = lambda wc: expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/beagle-gl/sections/{sg}.body.gz", sg=all_scaff_group_ids(wc))
+		header=expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/beagle-gl/sections/{sg}.toprow.gz", sg=first_scaff_group_id),
+		scaff_gzs=expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/beagle-gl/sections/{sg}.body.gz", sg=unique_scaff_groups)
 	output:
 		"results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/beagle-gl/beagle-gl.gz"
 	log:
