@@ -123,8 +123,21 @@ rule extract_sites_from_beagle_posts:
 
 
 
-
-
+# this creates a dot-samples file that has the PCs in it
+rule attach_PCs_to_dotsamples:
+	input:
+		dots=lambda wc: config["bcf"][wc.bcf_id]["sample_subsets"][wc.sampsub]["dotsample"],
+		cov="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.cov"
+	params:
+		num_pcs="{npc}"
+	log:
+		"results/logs/attach_PCs_to_dotsamples/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/npc_{npc}.log"
+	envmodules:
+		"R/4.0.3"
+	output:
+		dots="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/dotsample_PCs_{npc}.tsv"
+	script:
+		"../scripts/attach-pcs-to-dotsamples.R"
 
 
 
