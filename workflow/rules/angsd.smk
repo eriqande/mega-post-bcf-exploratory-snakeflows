@@ -58,5 +58,5 @@ rule angsd_do_asso_gather:
 		" HFILE=$(mktemp) &&                                                "
 		" gunzip -c {input.lrts[0]} | head -n 1 > $HFILE   &&               "
 		" ( cat $HFILE &&                                                   "
-		"     for(i in {input.lrts}; do gunzip -c $i | awk 'NR>1'; done     "
+		"     for i in {input.lrts}; do gunzip -c $i | awk 'NR>1'; done     "
 		" ) | gzip -c > {output.lrt} "
