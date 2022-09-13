@@ -9,7 +9,7 @@ sink(log, type = "message")
 
 library(tidyverse)
 
-samples_file <- snakemake@input$samples
+
 cov_file <- snakemake@input$cov
 dot_infile <- snakemake@input$dots
 npc <- snakemake@params$num_pcs
@@ -20,9 +20,10 @@ dot_outfile <- snakemake@output$dots
 #cov_file <- "~/Documents/projects/yukon-chinookomes/BigAssocResults/pcangsd/out.cov"
 #dot_infile <- ".test/data/dot-samples-all.tsv"
 
-samples <- read_tsv(samples_file, col_names = "ID")
-cov_mat <- matrix(scan(cov_file, what = numeric()), ncol = nrow(samples), byrow=TRUE)
 indots <- read_tsv(dot_infile)
+samples <- indots %>% slice(-1)
+cov_mat <- matrix(scan(cov_file, what = numeric()), ncol = nrow(samples), byrow=TRUE)
+
 
 eig <- eigen(cov_mat)
 colnames(eig$vectors) <- sprintf("PC-%d", 1:ncol(eig$vectors))
