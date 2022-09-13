@@ -28,7 +28,7 @@ rule angsd_do_asso_single:
 
 
 
-rule angsd_do_asso_revamp:
+rule angsd_do_asso_scatter:
 	input: 
 		beag="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/sections/{scaff_grp}-beagle-post.gz",
 		fai="{p}-ANGSD".format(p=config["fai_path"]),
@@ -49,4 +49,14 @@ rule angsd_do_asso_revamp:
 		"  -out $(dirname {output.arg})/{wildcards.scaff_grp}  > {log} 2>&1 "
 
 
-
+rule angsd_do_asso_gather:
+	input:
+		lrts=expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/do_asso/maf_{{min_maf}}/{{param_set}}/sections/{scaff_grp}.lrt0.gz", scaff_grp=unique_scaff_groups)
+	output:
+		lrt="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso/maf_{min_maf}/{param_set}/all-scaff-groups.lrt0.gz"
+	shell:
+		" HFILE=$(mktemp) &&                                                "
+		" gunzip -c {input.lrts[0]} | head -n 1 > $HFILE   &&               "
+		" ( cat $HFILE &&                                                   "
+		"     for(i in {input.lrts}; do gunzip -c $i | awk 'NR>1'; done     "
+		" ) | gzip -c > {output.lrt} "
