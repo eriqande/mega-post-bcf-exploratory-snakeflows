@@ -27,3 +27,26 @@ rule angsd_do_asso_single:
 
 
 
+
+rule angsd_do_asso_revamp:
+	input: 
+		beag="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/sections/{scaff_grp}-beagle-post.gz",
+		fai="{p}-ANGSD".format(p=config["fai_path"]),
+		sampleFile="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/dotsample_PCs_12.tsv"
+	params:
+		dicto=get_do_asso_param_set
+	log:
+		"results/logs/do_asso/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/{param_set}/sections/{scaff_grp}.log"
+	conda:
+		"../envs/angsd.yaml"
+	output:
+		 arg="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso/maf_{min_maf}/{param_set}/sections/{scaff_grp}.arg",
+		 lrt="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso/maf_{min_maf}/{param_set}/sections/{scaff_grp}.lrt0.gz"
+	shell:
+		" angsd {params.dicto[angsd_opts]}  -beagle {input.beag} -fai {input.fai} "
+		"  -sampleFile {input.sampleFile} -whichPhe {params.dicto[whichPhe]} "
+		"  -whichCov {params.dicto[whichCov]}  "
+		"  -out $(dirname {output.arg})/{wildcards.scaff_grp}  > {log} 2>&1 "
+
+
+

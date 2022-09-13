@@ -48,17 +48,52 @@ pcangsd:
 
 
 
-#### ACTIONS SECTIONS ####
 
-# Down in this section, we can list what kind of analyses we
-# would like to be done, on which sets of samples and with which
-# bcftools filters, as defined in the definitions section.
+#### PARAMETERS SECTION
+# Here we can give some short names for different sets of parameters
+# that we will use later for particular ultimate targets
 
-# In general, each of the types of analyses is defined by a separate
-# block which includes the parameter values specific to that analysis.
+# these are all the standard parameters in the file paths
+main_params:
+  TYPICAL_SET:
+    bcf: testy
+    filt: snps05
+    sample_subset: all
+    thin_spec: "0_0"
+    maf: 0.05
+    npc: 12 # this is just the number of pcs to attach to the dot-samples file
 
-# For the most part, these blocks are used to define targets that will
-# trigger the necessary workflow cascades.
+
+# Here we provide different sets of parameters for particular
+# analyses.
+params:
+  do_asso:
+    agephe_cohort_and_four_pcs_as_covariates:
+      angsd_opts: " -doMaf 4 -doAsso 4 "
+      whichPhe: " age "
+      whichCov: " cohort,PC-1,PC-2,PC-3,PC-4 "
+
+
+
+#### TARGETS SECTION
+
+# here we can request targets that are the products of
+# main_params and analyses from the params block above
+
+# I have to figure out the best way to cycle over these and produce
+# target files for.
+targets:
+  any_name:
+    main: TYPICAL_SET
+    analyses: 
+      do_asso:
+        agephe_cohort_and_four_pcs_as_covariates
+
+
+
+
+
+
 
 
 

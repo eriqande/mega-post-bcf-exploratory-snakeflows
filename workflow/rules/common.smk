@@ -29,3 +29,22 @@ def get_scaff_group_path(wildcards):
 
 def get_bcftools_opts(wildcards):
 	return config["bcftools_opts"][wildcards.bcfilt]
+
+
+def get_do_asso_param_set(wildcards):
+	return config["params"]["do_asso"][wildcards.param_set]
+
+
+#return config["boing"][wildcards.woop]
+# for testing
+def get_boing(wildcards):
+	squib = {"this": "sqeeb", "that": "squash"}
+	return squib
+
+rule boing:
+	params:
+		dicto=get_boing
+	output:
+		"THIS_FILE/{woop}.txt"
+	shell:
+		"echo {params.dicto[this]} {params.dicto[that]} > {output} "

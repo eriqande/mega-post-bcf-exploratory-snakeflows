@@ -20,7 +20,7 @@ include: "rules/bcftools_filter.smk"
 include: "rules/bcftools_thin.smk"
 include: "rules/formats.smk"
 include: "rules/pcangsd.smk"
-#include: "rules/angsd.smk"
+include: "rules/angsd.smk"
 
 
 
