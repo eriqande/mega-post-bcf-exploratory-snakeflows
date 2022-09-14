@@ -58,8 +58,6 @@ rule angsd_do_asso_gather:
 	resources:
 		mem_mb=19200
 	shell:
-		" HFILE=$(mktemp) &&                                                "
-		" gunzip -c {input.lrts[0]} | head -n 1 > $HFILE   &&               "
-		" ( cat $HFILE &&                                                   "
-		"     for i in {input.lrts}; do gunzip -c $i | awk 'NR>1'; done     "
+		" set +o pipefail; (gunzip -c {input.lrts[0]} | head -n 1;  "
+		"  for i in {input.lrts}; do gunzip -c $i | awk 'NR>1'; done "
 		" ) | gzip -c > {output.lrt} "
