@@ -35,16 +35,34 @@ def get_do_asso_param_set(wildcards):
 	return config["params"]["do_asso"][wildcards.param_set]
 
 
-#return config["boing"][wildcards.woop]
-# for testing
-def get_boing(wildcards):
-	squib = {"this": "sqeeb", "that": "squash"}
-	return squib
 
-rule boing:
-	params:
-		dicto=get_boing
-	output:
-		"THIS_FILE/{woop}.txt"
-	shell:
-		"echo {params.dicto[this]} {params.dicto[that]} > {output} "
+
+# here are the functions used to convert elements in targets
+# in the config into requested file names.
+# here, analysis is the key under targets, and tl is the list
+# of three things: [Main, SubSamp, Params]
+
+# this gives us the main starting path for any analysis and triplet
+def main_params_path(analysis, tl):
+	tlists=config["targets"][analysis]
+	return "results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_spec}/{anal}/maf_{min_maf}/{param_set}".format(
+		bcf_id=config["main_params"][tl[0]]["bcf"],
+		bcfilt=config["main_params"][tl[0]]["filt"],
+		sampsub=tl[1],
+		thin_spec=config["main_params"][tl[0]]["thin_spec"],
+		anal=analysis,
+		min_maf=config["main_params"][tl[0]]["maf"],
+		param_set=tl[2])
+
+
+# this function parses the dictionaries in config["targets"] and
+# expands to all the different requested ouptut files
+def expand_targets():
+	targ=config["targets"]
+	ret = []
+	if "do_asso" in targ:
+		for T in targ["do_asso"]:
+			mainp = main_params_path("do_asso", T)
+			ret = ret + [mainp + "/all-scaff-groups.lrt0.gz"]
+	return ret
+
