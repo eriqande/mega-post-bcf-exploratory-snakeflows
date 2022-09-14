@@ -76,7 +76,10 @@ params:
       angsd_opts: " -doMaf 4 -doAsso 4 "
       whichPhe: " age "
       whichCov: " cohort,PC-1,PC-2,PC-3,PC-4 "
-
+    SDYphe_4PCs:  # this one uses hasSDY as the phenotype---should show us misassembly in the genome
+      angsd_opts: " -doMaf 4 -doAsso 4 "
+      whichPhe: " hasSDY "
+      whichCov: " PC-1,PC-2,PC-3,PC-4 "
 
 
 #### TARGETS SECTION
@@ -97,6 +100,7 @@ targets:
     - ["standard", "all", "age_cohort_4PCs"]
     - ["standard", "hasSDY", "age_cohort_4PCs"]
     - ["standard", "noSDY", "age_cohort_4PCs"]
+    - ["standard", "all", "SDYphe_4PCs"]
 
 
 
