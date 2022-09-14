@@ -63,6 +63,9 @@ def expand_targets():
 	if "do_asso" in targ:
 		for T in targ["do_asso"]:
 			mainp = main_params_path("do_asso", T)
+			# get the LRT files
 			ret = ret + [mainp + "/all-scaff-groups.lrt0.gz"]
+			# get the manhattan plots
+			ret = ret + [mainp + "/{sampsub}-{param_set}-manhattan-plot.jpg".format(sampsub=T[1], param_set=T[2])]  
 	return ret
 

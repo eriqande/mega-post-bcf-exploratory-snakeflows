@@ -55,9 +55,43 @@ rule angsd_do_asso_gather:
 	output:
 		lrt="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso/maf_{min_maf}/{param_set}/all-scaff-groups.lrt0.gz"
 	threads: 4
-	resources:
-		mem_mb=19200
 	shell:
 		" set +o pipefail; (gunzip -c {input.lrts[0]} | head -n 1;  "
 		"  for i in {input.lrts}; do gunzip -c $i | awk 'NR>1'; done "
 		" ) | gzip -c > {output.lrt} "
+
+
+
+
+rule do_asso_manhattan_plot:
+	input:
+		sg=config["scaff_group_path"],
+		lrt="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso/maf_{min_maf}/{param_set}/all-scaff-groups.lrt0.gz"
+	log:
+		"results/logs/do_asso_manhattan_plot/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/{param_set}.log"
+	output:
+		mh_plot="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso/maf_{min_maf}/{param_set}/{sampsub}-{param_set}-manhattan-plot.jpg"
+	script:
+		"../scripts/manhattan-plot.R"
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
