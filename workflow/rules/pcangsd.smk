@@ -49,6 +49,8 @@ rule pcangsd_with_gposts:
 	conda:
 		"../envs/pcangsd.yaml"
 	threads: 20
+	resources:
+		mem_mb=190000
 	log:
 		pcangsd="results/logs/pcangsd_with_gposts/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/pcangsd_part.txt",
 		beagle="results/logs/pcangsd_with_gposts/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle_paste_part.txt",

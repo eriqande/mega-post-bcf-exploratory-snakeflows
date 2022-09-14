@@ -1,7 +1,7 @@
 cluster:
   mkdir -p results/slurm_logs/{rule} &&
   sbatch
-    --exclude=node[29-36]
+    --exclude=node[01-05]
     --cpus-per-task={threads}
     --mem={resources.mem_mb}
     --time={resources.time}

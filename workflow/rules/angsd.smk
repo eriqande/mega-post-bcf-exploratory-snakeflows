@@ -54,6 +54,9 @@ rule angsd_do_asso_gather:
 		lrts=expand("results/bcf_{{bcf_id}}/filt_{{bcfilt}}/{{sampsub}}/thin_{{thin_int}}_{{thin_start}}/do_asso/maf_{{min_maf}}/{{param_set}}/sections/{scaff_grp}.lrt0.gz", scaff_grp=unique_scaff_groups)
 	output:
 		lrt="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso/maf_{min_maf}/{param_set}/all-scaff-groups.lrt0.gz"
+	threads: 4
+	resources:
+		mem_mb=19200
 	shell:
 		" HFILE=$(mktemp) &&                                                "
 		" gunzip -c {input.lrts[0]} | head -n 1 > $HFILE   &&               "
