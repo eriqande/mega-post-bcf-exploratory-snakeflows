@@ -69,6 +69,8 @@ rule do_asso_manhattan_plot:
 		lrt="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso/maf_{min_maf}/{param_set}/all-scaff-groups.lrt0.gz"
 	log:
 		"results/logs/do_asso_manhattan_plot/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/{param_set}.log"
+	envmodules:
+		"R/4.0.3"
 	output:
 		mh_plot="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso/maf_{min_maf}/{param_set}/{sampsub}-{param_set}-manhattan-plot.jpg"
 	script:
