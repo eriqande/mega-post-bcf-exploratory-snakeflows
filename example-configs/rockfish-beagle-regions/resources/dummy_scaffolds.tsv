@@ -1,0 +1,5 @@
+id	chrom	start	stop	angsd_chrom	mh_label
+scaff_grp_0001	NC_056429.1	1	95801903	NC-056429.1	1
+scaff_grp_0002	NC_056430.1	1	75537397	NC-056430.1	2
+scaff_grp_0003	NC_056431.1	1	81554755	NC-056431.1	3
+scaff_grp_0004	NC_056432.1	1	75613410	NC-056432.1	4

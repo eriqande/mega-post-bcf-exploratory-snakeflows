@@ -67,5 +67,25 @@ def expand_targets():
 			ret = ret + [mainp + "/all-scaff-groups.lrt0.gz"]
 			# get the manhattan plots
 			ret = ret + [mainp + "/{sampsub}-{param_set}-manhattan-plot.jpg".format(sampsub=T[1], param_set=T[2])]  
+	if "beagle_regions" in targ:
+		for T in targ["beagle_regions"]:
+			path="results/beagle_regions/{mpars}/{region}/phased/{sampset}.vcf.gz.csi".format(
+				mpars=T[0],
+				region=T[2],
+				sampset=T[1]
+				)
+			ret = ret + [path]
 	return ret
+
+
+
+
+
+
+
+
+
+
+
+
 

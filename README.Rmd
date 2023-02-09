@@ -82,6 +82,23 @@ in bcftools, and then we can do thinning from there.  Complete rewrite, but
 I think it will serve us better.
 
 
+## Beagle_regions
+
+I want to make a quick workflow for running beagle-4 to phase small
+regions of chromosomes from specified subsets of individuals.
+
+This is quite different from what we have done to date, since
+we don't need to process the entire BCF file by scaffold. So, 
+it will be a little separate from what we did previously, but
+it still seems like we have a good framework here to keep going on.
+
+This will be developed within `example-configs/rockfish-beagle-regions`
+
+We don't really need a scaffold file for this, so I will just make a dummy
+there.
+
+
+
 
 ## Development
 

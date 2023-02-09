@@ -1,0 +1,6 @@
+channels:
+  - "bioconda/label/cf201901"
+  - conda-forge
+  - defaults
+dependencies:
+  - beagle==4.1_21Jan17.6cc.jar

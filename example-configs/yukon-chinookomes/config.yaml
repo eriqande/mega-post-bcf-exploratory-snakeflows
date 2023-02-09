@@ -39,6 +39,11 @@ bcf:
       everyone: # all the fish, including NZ and Argentina
         path: example-configs/yukon-chinookomes/sample_subsets/everyone.txt
         dotsample: example-configs/yukon-chinookomes/data/dot-samples-everyone.tsv
+  extract_others_from_01:
+    path: /home/eanderson/Documents/projects/yukon-chinookomes-all-together/results/bqsr-round-1/bcf/pass-maf-0.01.bcf
+      sample_subsets:
+        nzarwr:
+          path: example-configs/yukon-chinookomes/sample_subsets/nzarwr.txt
 
 
 # same thing here, we can define different sets of bcftools filters

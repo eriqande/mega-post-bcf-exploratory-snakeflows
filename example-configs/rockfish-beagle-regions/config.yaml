@@ -1,0 +1,109 @@
+## This is the config file that determnines what analyses will
+## be run on which sample subset from which parent BCF
+
+
+#### DEFINITIONS SECTIONS #####
+
+# every BCF file used here must correspond to the same
+# reference genome and thus to the same scaffold groups file.
+# These are identified here:
+fai_path: example-configs/rockfish-beagle-regions/resources/genome.fasta.fai
+scaff_group_path: example-configs/rockfish-beagle-regions/resources/dummy_scaffolds.tsv
+
+
+
+# this is the short name and the path to the BCF file that will be used,
+# as well as sample subsets that we want to use
+bcf:
+  rockfish:
+    path: /Users/eriq/Documents/UnsyncedData/Rockfish-Genomics/rockfish-lanes-1-and-2/pass-maf-0.01.bcf
+    sample_subsets:
+      gopher:
+        path: example-configs/rockfish-beagle-regions/sample_subsets/carnatus.txt
+      BY:
+        path: example-configs/rockfish-beagle-regions/sample_subsets/chrysomelas.txt
+      blue:
+        path: example-configs/rockfish-beagle-regions/sample_subsets/mystinus.txt
+      deacon:
+        path: example-configs/rockfish-beagle-regions/sample_subsets/diaconus.txt
+      black:
+        path: example-configs/rockfish-beagle-regions/sample_subsets/melanops.txt
+      yellowtail: 
+        path: example-configs/rockfish-beagle-regions/sample_subsets/flavidus.txt
+      gopher_BY:
+        path: example-configs/rockfish-beagle-regions/sample_subsets/gopher_BY.txt
+
+# same thing here, we can define different sets of bcftools filters
+# that we might want to use, and we give them nicknames. The 
+# nicknames/keys here correspond to wildcard 
+bcftools_opts:
+  biallelics: -m 2 -M 2 --min-ac 1:alt1 -i 'FILTER="PASS"'
+  biallele_low_miss:  -m 2 -M 2 --min-ac 1:alt1 -i 'FILTER="PASS" && N_MISSING < 3'
+  lt5:  -m 2 -M 2 --min-ac 1:alt1 -i 'FILTER="PASS" && N_MISSING < 5'
+
+# keep only sites that still have an alternate allele
+# after subsetting the samples.  
+
+
+
+#### SETTING SECTIONS #####
+
+# even though we don't use this for beagle_regions we have
+# to have this in there.
+pcangsd:
+  url: git@github.com:eriqande/pcangsd.git
+  version: 705ca4c19630ed9c2dd254b0bfd528b8ee25d5c0
+
+
+#### PARAMETERS SECTION
+# Here we can give some short names for different sets of parameters
+# that we will use later for particular ultimate targets
+
+# these are all the standard parameters in the file paths
+main_params:
+  plain:
+    bcf: rockfish
+    filt: biallelics
+  miss_lt_3:
+    bcf: rockfish
+    filt: biallele_low_miss
+  miss_lt_5:
+    bcf: rockfish
+    filt: lt5
+
+
+# Here we provide different sets of parameters for particular
+# analyses.
+params:
+  beagle_regions:
+    regions:
+      chr17_10Mb: "NC_051285.1:12000000-22000000"
+
+
+#### TARGETS SECTION
+
+# here we have a shorthand for describing target outputs.
+# Each output is defined by a triple: [A, B, C] that lives under
+# a heading which says which kind of analysis is desired.
+# where 
+#   - A is a nickname from main_params
+#   - B is a nickname for a subsample that is appropriate to the BCF in A
+#   - C is a nickname for the region to use in the analysis
+#
+# The idea here is that each of these triples can be used to define a file name
+# or possibly multiple filenames.
+
+targets:
+  beagle_regions:
+    - ["plain", "blue", "chr17_10Mb"]
+    - ["plain", "deacon", "chr17_10Mb"]
+    - ["plain", "gopher", "chr17_10Mb"]
+    - ["plain", "BY", "chr17_10Mb"]
+    - ["plain", "black", "chr17_10Mb"]
+    - ["plain", "yellowtail", "chr17_10Mb"]
+    - ["miss_lt_3", "gopher", "chr17_10Mb"]
+    - ["miss_lt_5", "gopher_BY", "chr17_10Mb"]
+    - ["miss_lt_3", "gopher_BY", "chr17_10Mb"]
+
+
+
