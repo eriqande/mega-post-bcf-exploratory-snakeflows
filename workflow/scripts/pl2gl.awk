@@ -23,16 +23,21 @@ BEGIN {
 	gsub(/:/, "_", chrompos)
 	printf("%s\t%s\t%s", chrompos, base2int[$2], base2int[$3]); 
 	for(i=4;i<=NF;i++) {
-		n=split($i,a,/,/); 
-		if(n!=3) {
-			print "Not 3 GL values at ", $1  > "/dev/stderr";
-			exit;
-		} 
-		x=10^(-a[1]/10); 
-		y=10^(-a[2]/10);
-		z=10^(-a[3]/10); 
-		sum=x+y+z; 
-		printf("\t%.6f\t%.6f\t%.6f",x/sum, y/sum,z/sum); 
+		if($i == ".") {  # deal with old VCFs that use a single dot here
+			printf("\t%.6f\t%.6f\t%.6f", 1.0/3.0, 1.0/3.0, 1.0/3.0);
+		}
+		else {
+			n=split($i,a,/,/); 
+			if(n!=3) {
+				print "Not 3 GL values at ", $1  > "/dev/stderr";
+				exit;
+			} 
+			x=10^(-a[1]/10); 
+			y=10^(-a[2]/10);
+			z=10^(-a[3]/10); 
+			sum=x+y+z; 
+			printf("\t%.6f\t%.6f\t%.6f",x/sum, y/sum,z/sum); 
+		}
 	} 
 	printf("\n");
 }
