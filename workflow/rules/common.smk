@@ -35,6 +35,10 @@ def get_do_asso_param_set(wildcards):
 	return config["params"]["do_asso"][wildcards.param_set]
 
 
+wildcard_constraints:
+	thin_int="[0-9]+",
+	thin_start="[0-9]+" 
+
 
 
 # here are the functions used to convert elements in targets
@@ -55,9 +59,9 @@ def main_params_path(analysis, tl):
 		param_set=tl[2])
 
 # this gives us the main starting path for any analysis that doesn't have a param set
-def main_params_path_no_paramset(analysis, tl):
+def beagle_path(analysis, tl):
 	tlists=config["targets"][analysis]
-	return "results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_spec}/{anal}/maf_{min_maf}".format(
+	return "results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_spec}/beagle-gl/beagle-gl.gz".format(
 		bcf_id=config["main_params"][tl[0]]["bcf"],
 		bcfilt=config["main_params"][tl[0]]["filt"],
 		sampsub=tl[1],
@@ -82,8 +86,8 @@ def expand_targets():
 			ret = ret + [mainp + "/{sampsub}-{param_set}-manhattan-plot.jpg".format(sampsub=T[1], param_set=T[2])]  
 	if "beagle_gl" in targ:
 		for T in targ["beagle_gl"]:
-			mainp = main_params_path_no_paramset("beagle_gl", T)
-			ret = ret + [mainp + "/beagle-gl/beagle-gl.gz"]
+			mainp = beagle_path("beagle_gl", T)
+			ret = ret + [mainp]
 	if "beagle_regions" in targ:
 		for T in targ["beagle_regions"]:
 			path="results/beagle_regions/{mpars}/{region}/phased/{sampset}.vcf.gz.csi".format(
