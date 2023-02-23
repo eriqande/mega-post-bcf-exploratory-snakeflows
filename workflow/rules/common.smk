@@ -54,6 +54,19 @@ def main_params_path(analysis, tl):
 		min_maf=config["main_params"][tl[0]]["maf"],
 		param_set=tl[2])
 
+# this gives us the main starting path for any analysis that doesn't have a param set
+def main_params_path_no_paramset(analysis, tl):
+	tlists=config["targets"][analysis]
+	return "results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_spec}/{anal}/maf_{min_maf}".format(
+		bcf_id=config["main_params"][tl[0]]["bcf"],
+		bcfilt=config["main_params"][tl[0]]["filt"],
+		sampsub=tl[1],
+		thin_spec=config["main_params"][tl[0]]["thin_spec"],
+		anal=analysis,
+		min_maf=config["main_params"][tl[0]]["maf"]
+		)
+
+
 
 # this function parses the dictionaries in config["targets"] and
 # expands to all the different requested ouptut files
@@ -67,6 +80,10 @@ def expand_targets():
 			ret = ret + [mainp + "/all-scaff-groups.lrt0.gz"]
 			# get the manhattan plots
 			ret = ret + [mainp + "/{sampsub}-{param_set}-manhattan-plot.jpg".format(sampsub=T[1], param_set=T[2])]  
+	if "beagle_gl" in targ:
+		for T in targ["beagle_gl"]:
+			mainp = main_params_path_no_paramset("beagle_gl", T)
+			ret = ret + [mainp + "/beagle-gl/beagle-gl.gz"]
 	if "beagle_regions" in targ:
 		for T in targ["beagle_regions"]:
 			path="results/beagle_regions/{mpars}/{region}/phased/{sampset}.vcf.gz.csi".format(
