@@ -96,6 +96,10 @@ def expand_targets():
 				sampset=T[1]
 				)
 			ret = ret + [path]
+	if "pcangsd_plain" in targ:
+		for T in targ["pcangsd_plain"]:
+			mainp = main_params_path("pcangsd_plain", T)
+			ret = ret + [mainp + "/out.cov"]
 	return ret
 
 

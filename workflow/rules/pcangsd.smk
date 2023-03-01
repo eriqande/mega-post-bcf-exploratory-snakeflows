@@ -32,6 +32,34 @@ rule install_pcangsd:
 # the active conda env.  Yep! That works nicely.
 
 
+
+# this is for simple pcangsd with no genotype posteriors
+rule pcangsd_no_gposts:
+	input:  
+		flagfile="results/flags/pcangsd_installed",
+		beagle="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/beagle-gl/beagle-gl.gz"
+	params: 
+		minMaf = "{min_maf}"
+	output:
+		args="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/out.args",
+		cov="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/out.cov",
+		mafs="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/out.maf.npy",
+		sites="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/out.sites"
+		
+	conda:
+		"../envs/pcangsd.yaml"
+	threads: 20
+	resources:
+		mem_mb=190000
+	log:
+		pcangsd="results/logs/pcangsd_no_gposts/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/pcangsd_part.txt",
+		beagle="results/logs/pcangsd_no_gposts/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle_paste_part.txt",
+	shell:
+		" (OUTPRE=$(dirname {output.cov})/out && "
+		" pcangsd -b {input.beagle} --minMaf {params.minMaf} -t {threads} --maf_save --sites_save --out $OUTPRE > {log.pcangsd} 2>&1) "
+
+
+
 # this one spits out the genotype posteriors and then beagle-izes them
 rule pcangsd_with_gposts:
 	input:  
