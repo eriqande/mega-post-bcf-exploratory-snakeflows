@@ -37,7 +37,7 @@ def get_do_asso_param_set(wildcards):
 
 wildcard_constraints:
 	thin_int="[0-9]+",
-	thin_start="[0-9]+" 
+	thin_start="[0-9]+"
 
 
 

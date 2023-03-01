@@ -41,10 +41,10 @@ rule pcangsd_no_gposts:
 	params: 
 		minMaf = "{min_maf}"
 	output:
-		args="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/out.args",
-		cov="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/out.cov",
-		mafs="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/out.maf.npy",
-		sites="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/out.sites"
+		args="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/{param_set}/out.args",
+		cov="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/{param_set}/out.cov",
+		mafs="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/{param_set}/out.maf.npy",
+		sites="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/{param_set}/out.sites"
 		
 	conda:
 		"../envs/pcangsd.yaml"
@@ -52,8 +52,8 @@ rule pcangsd_no_gposts:
 	resources:
 		mem_mb=190000
 	log:
-		pcangsd="results/logs/pcangsd_no_gposts/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/pcangsd_part.txt",
-		beagle="results/logs/pcangsd_no_gposts/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle_paste_part.txt",
+		pcangsd="results/logs/pcangsd_no_gposts/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/{param_set}/pcangsd_part.txt",
+		beagle="results/logs/pcangsd_no_gposts/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/{param_set}/beagle_paste_part.txt",
 	shell:
 		" (OUTPRE=$(dirname {output.cov})/out && "
 		" pcangsd -b {input.beagle} --minMaf {params.minMaf} -t {threads} --maf_save --sites_save --out $OUTPRE > {log.pcangsd} 2>&1) "
