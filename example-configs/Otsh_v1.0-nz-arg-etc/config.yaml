@@ -33,6 +33,9 @@ bcf:
     sample_subsets:
       all:
         path: "example-configs/Otsh_v1.0-nz-arg-etc/sample_lists/cali-nz-arg-merged_samples.txt"
+      cv_and_south:
+        path: "example-configs/Otsh_v1.0-nz-arg-etc/sample_lists/cv-and-south-hemi.txt"
+        dotsample: "example-configs/Otsh_v1.0-nz-arg-etc/dot-samples/cv-and-south-hemi.tsv"
 
 
 # same thing here, we can define different sets of bcftools filters
@@ -74,14 +77,17 @@ main_params:
     thin_spec: "0_0"
     maf: 0.05
 
-
 # Here we provide different sets of parameters for particular
 # analyses.
 params:
   do_asso:
+    age_cohort_2PCs:
+      angsd_opts: " -doMaf 4 -doAsso 4 "
+      whichPhe: " hemi "
+      whichCov: " cohort,PC-1,PC-2 "
     age_cohort_4PCs:
       angsd_opts: " -doMaf 4 -doAsso 4 "
-      whichPhe: " age "
+      whichPhe: " hemi "
       whichCov: " cohort,PC-1,PC-2,PC-3,PC-4 "
   pcangsd_plain:
     no_frills:
@@ -104,5 +110,7 @@ targets:
     - ["cali", "all", "no_frills"]
     - ["nz_arg", "all", "no_frills"]
     - ["cali_nz_arg", "all", "no_frills"]
-
+  do_asso:
+    - ["cali_nz_arg", "all", "age_cohort_4PCs"]
+    - ["cali_nz_arg", "all", "age_cohort_2PCs"]
 

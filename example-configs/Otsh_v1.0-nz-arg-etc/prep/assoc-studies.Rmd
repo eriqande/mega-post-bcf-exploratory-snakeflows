@@ -1,0 +1,37 @@
+---
+title: "Prepping for association studies"
+output: html_notebook
+---
+
+Even though there is clearly an effect of sequencing platform (that actually
+shows up on PC-1) between the Hi-Seq and the Nova-Seq data, we are going to
+just do an exploratory GWAS or two.  We just need to prep some sample lists
+and some dot-sample files.
+
+```{r, message=FALSE, warning=FALSE}
+library(tidyverse)
+
+meta <- read_csv("Chinook_merged_metadata.csv")
+
+```
+
+## CV vs all southern Hemi
+
+Let's compare the non-winter-run CV to the NZ and Arg together:
+
+```{r}
+samples1 <- meta %>%
+  filter(!str_detect(Population, "Trinity|Salmon")) %>%
+  filter(run_type != "Winter") %>%
+  select(vcf_name) %>%
+  rename(ID = vcf_name)
+
+tmp <- samples1 %>%
+  mutate(hemi = as.character(ifelse(str_detect(ID, "^DP"), 0, 1)))  # hemisphere south = 1, north = 0
+
+dotsample1 <- bind_rows(tibble(ID = "0", hemi = "B"), tmp)
+
+write_lines(samples1$ID, file = "../sample_lists/cv-and-south-hemi.txt")
+dir.create("../dot-samples", showWarnings = FALSE, recursive = TRUE)
+write_tsv(dotsample1, file = "../dot-samples/cv-and-south-hemi.tsv")
+```
