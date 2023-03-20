@@ -11,7 +11,10 @@ and some dot-sample files.
 ```{r, message=FALSE, warning=FALSE}
 library(tidyverse)
 
-meta <- read_csv("Chinook_merged_metadata.csv")
+# there is one sample that is somehow in this twice so we
+# filter it out:
+meta <- read_csv("Chinook_merged_metadata.csv") %>%
+  filter(!duplicated(vcf_name))
 
 ```
 
