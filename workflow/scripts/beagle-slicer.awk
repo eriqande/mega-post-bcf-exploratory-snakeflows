@@ -4,8 +4,8 @@
 # column and angsd-chromosome names in the fifth column.  That scaff group
 # file has a header line which will be skipped.  
 
-# Note that the header line of the beagle file is the first one that does
-# not have 5 columns.
+# Note that the header line of the beagle file is the first one that has more
+# than 6 columns.
 
 # you must set a variable `path` with -v that gives the directory you
 # want these to go into.
@@ -27,7 +27,7 @@ NR == 1 {
 	next
 }
 
-NF > 5 && n==0 {go=1;  header=$0; n++; next}
+NF > 6 && n==0 {go=1;  header=$0; n++; next}
 
 # record the scaff group for each chromosome
 go == 0 {
