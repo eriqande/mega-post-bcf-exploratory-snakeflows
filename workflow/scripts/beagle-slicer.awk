@@ -23,6 +23,7 @@ BEGIN {OFS = "\t"; IFS="\t"; gzcomm = " gzip - "}
 NR == 1 {
 	if($1 != "id" && $5 != "angsd_chrom") {
 		print "Column 1 not named id and column five not named angsd_chrom.  Bailing! " > "/dev/stderr"
+		exit(1)
 	}
 	next
 }
@@ -43,7 +44,7 @@ go == 1 {
 	filep = path "/" sg[a[1]] "-beagle-" ext ".gz"
 	gzp = "gzip > " filep
 
-	print a[1], sg[a[1]], gzp
+	#print a[1], sg[a[1]], gzp
 
 	if(f == 0) {
 		op = filep
