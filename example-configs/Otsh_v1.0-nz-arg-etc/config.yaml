@@ -111,6 +111,6 @@ targets:
     - ["nz_arg", "all", "no_frills"]
     - ["cali_nz_arg", "all", "no_frills"]
   do_asso:
-    - ["cali_nz_arg", "all", "age_cohort_4PCs"]
-    - ["cali_nz_arg", "all", "age_cohort_2PCs"]
+    - ["cali_nz_arg", "cv_and_south", "age_cohort_4PCs"]
+    - ["cali_nz_arg", "cv_and_south", "age_cohort_2PCs"]
 
