@@ -65,7 +65,7 @@ rule angsd_do_asso_ybin_scatter:
 		 arg="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso_ybin/maf_{min_maf}/{param_set}/sections/{scaff_grp}.arg",
 		 lrt="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso_ybin/maf_{min_maf}/{param_set}/sections/{scaff_grp}.lrt0.gz"
 	shell:
-		" angsd -doMaf 4 -doAsso 1 -beagle {input.beag} -yBin {input.ybin} -fai {input.fai} "
+		" angsd -doMaf 4 -doAsso 2 -beagle {input.beag} -yBin {input.ybin} -fai {input.fai} "
 		"  -out $(dirname {output.arg})/{wildcards.scaff_grp}  > {log} 2>&1 "
 
 
