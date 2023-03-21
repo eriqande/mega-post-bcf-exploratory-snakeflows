@@ -92,6 +92,8 @@ params:
       whichCov: " cohort,PC-1,PC-2,PC-3,PC-4 "
   pcangsd_plain:
     no_frills:
+  do_asso_ybin:
+    dummy:
       
 #### TARGETS SECTION
 
@@ -114,4 +116,6 @@ targets:
   do_asso:
     - ["cali_nz_arg", "cv_and_south", "age_cohort_4PCs"]
     - ["cali_nz_arg", "cv_and_south", "age_cohort_2PCs"]
+  do_asso_ybin:
+    - ["cali_nz_arg", "cv_and_south", "dummy"]
 
