@@ -36,6 +36,7 @@ bcf:
       cv_and_south:
         path: "example-configs/Otsh_v1.0-nz-arg-etc/sample_lists/cv-and-south-hemi.txt"
         dotsample: "example-configs/Otsh_v1.0-nz-arg-etc/dot-samples/cv-and-south-hemi.tsv"
+        ybin: "example-configs/Otsh_v1.0-nz-arg-etc/ybins/cv-and-south-hemi.txt"
 
 
 # same thing here, we can define different sets of bcftools filters
