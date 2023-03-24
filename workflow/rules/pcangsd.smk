@@ -33,7 +33,7 @@ rule install_pcangsd:
 
 
 
-# this is for simple pcangsd with no genotype posteriors
+# this is for simple pcangsd with no genotype posteriors.  It also computes the selection statistics.
 rule pcangsd_no_gposts:
 	input:  
 		flagfile="results/flags/pcangsd_installed",
@@ -56,7 +56,7 @@ rule pcangsd_no_gposts:
 		beagle="results/logs/pcangsd_no_gposts/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/{param_set}/beagle_paste_part.txt",
 	shell:
 		" (OUTPRE=$(dirname {output.cov})/out && "
-		" pcangsd -b {input.beagle} --minMaf {params.minMaf} -t {threads} --maf_save --sites_save --out $OUTPRE > {log.pcangsd} 2>&1) "
+		" pcangsd -b {input.beagle} --minMaf {params.minMaf} -t {threads} --maf_save --sites_save --selection --out $OUTPRE > {log.pcangsd} 2>&1) "
 
 
 
