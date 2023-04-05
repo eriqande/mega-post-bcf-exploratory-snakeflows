@@ -30,6 +30,13 @@ bothvlf <- meta2 %>%
   select(vcf_name, Population) %>%
   mutate(cc = ifelse(str_detect(Population, "Coleman"), 1L, 0L))
 
+# I also want to add feather river spring in there...
+metaBoing <- meta %>% 
+  filter(
+    Population %in% c("Coleman Hatchery Late Fall", "Feather River Hatchery Fall", "San Joaquin River Fall", "Feather River Hatchery Fall")
+  ) %>%
+  arrange(Population)
+
 # make a function to write out the dot samples (though we end up not using them)
 write_dot_samples <- function(x, path = "tmp.txt") {
   top_row <- tibble(ID = "0", runtime = "B")
