@@ -1,0 +1,69 @@
+---
+title: "Setting up Fall vs Late Fall stuff"
+output: html_notebook
+---
+
+
+Get the meta data:
+```{r}
+library(tidyverse)
+
+meta <- read_csv("https://raw.githubusercontent.com/eriqande/thompson-et-al-2020-chinook-salmon-migration-timing/master/data/wgs-chinook-samples.csv")
+
+meta2 <- meta %>% 
+  filter(
+    Population %in% c("Coleman Hatchery Late Fall", "Feather River Hatchery Fall", "San Joaquin River Fall")
+  ) %>%
+  arrange(Population)
+
+sjvlf <- meta2 %>%
+  filter(Population %in% c("Coleman Hatchery Late Fall", "San Joaquin River Fall")) %>%
+  select(vcf_name, Population) %>%
+  mutate(cc = ifelse(str_detect(Population, "Coleman"), 1L, 0L))
+
+frvlf <- meta2 %>%
+  filter(Population %in% c("Coleman Hatchery Late Fall", "Feather River Hatchery Fall")) %>%
+  select(vcf_name, Population) %>%
+  mutate(cc = ifelse(str_detect(Population, "Coleman"), 1L, 0L))
+
+bothvlf <- meta2 %>%
+  select(vcf_name, Population) %>%
+  mutate(cc = ifelse(str_detect(Population, "Coleman"), 1L, 0L))
+
+# make a function to write out the dot samples (though we end up not using them)
+write_dot_samples <- function(x, path = "tmp.txt") {
+  top_row <- tibble(ID = "0", runtime = "B")
+  xx <- x %>%
+    rename(ID = vcf_name, runtime = cc) %>%
+    mutate(runtime = as.character(runtime)) %>%
+    select(-Population)
+  
+  bind_rows(top_row, xx) %>%
+    write_tsv(file = path)
+}
+
+dir.create("../dot_samples")
+
+write_dot_samples(sjvlf, path = "../dot_samples/lf_v_sanjo.tsv")
+write_dot_samples(frvlf, path = "../dot_samples/lf_v_frhf.tsv")
+write_dot_samples(bothvlf, path = "../dot_samples/lf_v_both.tsv")
+
+# and now we write out the sample lists:
+dir.create("../sample_lists")
+cat(sjvlf$vcf_name, sep = "\n", file = "../sample_lists/lf_v_sanjo.txt")
+cat(frvlf$vcf_name, sep = "\n", file = "../sample_lists/lf_v_frhf.txt")
+cat(bothvlf$vcf_name, sep = "\n", file = "../sample_lists/lf_v_both.txt")
+
+# and we need to write out the ybins.  For this we can make a function
+write_ybins <- function(x, path = "tmp.txt") {
+  str_detect(x$Population, "Coleman") %>%
+    as.integer() %>%
+    cat(., sep = "\n", file = path)
+}
+dir.create("../ybins")
+
+write_ybins(sjvlf, "../ybins/lf_v_sanjo.txt")
+write_ybins(frvlf, "../ybins/lf_v_frhf.txt")
+write_ybins(bothvlf, "../ybins/lf_v_both.txt")
+
+```

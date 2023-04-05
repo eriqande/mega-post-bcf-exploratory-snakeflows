@@ -1,0 +1,94 @@
+## This is the config file that determnines what analyses will
+## be run on which sample subset from which parent BCF
+
+
+#### DEFINITIONS SECTIONS #####
+
+# every BCF file used here must correspond to the same
+# reference genome and thus to the same scaffold groups file.
+# These are identified here:
+fai_path: example-configs/Otsh_v1.0-fall-v-late-fall/Otsh_v1.0_genomic.fna.fai
+scaff_group_path: example-configs/Otsh_v1.0-fall-v-late-fall/scaffold_groups.tsv
+
+
+
+# this is the short name and the path to the BCF file that will be used
+# the key here (testy) corresponds to wildcard {bcf_id}.  The sample subsets
+# should, of course, correspond to a particular
+# bcf file, so they go here.  If there are meta data files for association
+# studies in ANGSD, these go here as the dotsample.
+bcf:
+  cal_chinook:
+    path: "data/california.vcf.gz"  # GET FILE AND PUT PATH IN
+    sample_subsets:
+      lf_v_sanjo:
+        path: "example-configs/Otsh_v1.0-fall-v-late-fall/sample_lists/lf_v_sanjo.txt"
+        ybin: "example-configs/Otsh_v1.0-fall-v-late-fall/ybins/lf_v_sanjo.txt"
+      lf_v_frhf:
+        path: "example-configs/Otsh_v1.0-fall-v-late-fall/sample_lists/lf_v_frhf.txt"
+        ybin: "example-configs/Otsh_v1.0-fall-v-late-fall/ybins/lf_v_frhf.txt"
+      lf_v_sanjo:
+        path: "example-configs/Otsh_v1.0-fall-v-late-fall/sample_lists/lf_v_both.txt"
+        ybin: "example-configs/Otsh_v1.0-fall-v-late-fall/ybins/lf_v_both.txt"
+ 
+
+# same thing here, we can define different sets of bcftools filters
+# that we might want to use, and we give them nicknames. The 
+# nicknames/keys here correspond to wildcard 
+bcftools_opts:
+  snps05: -v snps -m 2 -M 2 -i 'F_MISSING < 0.20 && (MLEAF > 0.05 || MLEAF < 0.95)'
+
+
+#### SETTING SECTIONS #####
+
+pcangsd:
+  url: git@github.com:eriqande/pcangsd.git
+  version: 705ca4c19630ed9c2dd254b0bfd528b8ee25d5c0
+
+
+
+
+
+#### PARAMETERS SECTION
+# Here we can give some short names for different sets of parameters
+# that we will use later for particular ultimate targets
+
+# these are all the standard parameters in the file paths
+main_params:
+  std:
+    bcf: cal_chinook
+    filt: snps05
+    thin_spec: "0_0"
+    maf: 0.05
+
+
+# Here we provide different sets of parameters for particular
+# analyses.
+params:
+  do_asso_ybin:
+    dummy:
+      
+#### TARGETS SECTION
+
+# here we have a shorthand for describing target outputs.
+# Each output is defined by a triple: [A, B, C] that lives under
+# a heading which says which kind of analysis is desired.
+# where 
+#   - A is a nickname from main_params
+#   - B is a nickname for a subsample that is appropriate to the BCF in A
+#   - C is a nickname for the parameters defined in params for the particular analysis
+#
+# The idea here is that each of these triples can be used to define a file name
+# or possibly multiple filenames.
+
+targets:
+  pcangsd_plain: # this is here in case you just want to 
+    - ["cali", "all", "no_frills"]
+    - ["nz_arg", "all", "no_frills"]
+    - ["cali_nz_arg", "all", "no_frills"]
+  do_asso:
+    - ["cali_nz_arg", "cv_and_south", "age_cohort_4PCs"]
+    - ["cali_nz_arg", "cv_and_south", "age_cohort_2PCs"]
+  do_asso_ybin:
+    - ["cali_nz_arg", "cv_and_south", "dummy"]
+
