@@ -31,11 +31,15 @@ bothvlf <- meta2 %>%
   mutate(cc = ifelse(str_detect(Population, "Coleman"), 1L, 0L))
 
 # I also want to add feather river spring in there...
-metaBoing <- meta %>% 
+meta4 <- meta %>% 
   filter(
     Population %in% c("Coleman Hatchery Late Fall", "Feather River Hatchery Fall", "San Joaquin River Fall", "Feather River Hatchery Fall")
   ) %>%
   arrange(Population)
+
+frhspf_sj_lf <- meta4 %>%
+  select(vcf_name, Population) %>%
+  mutate(cc = ifelse(str_detect(Population, "Coleman"), 1L, 0L))
 
 # make a function to write out the dot samples (though we end up not using them)
 write_dot_samples <- function(x, path = "tmp.txt") {
@@ -59,7 +63,8 @@ write_dot_samples(bothvlf, path = "../dot_samples/lf_v_both.tsv")
 dir.create("../sample_lists")
 cat(sjvlf$vcf_name, sep = "\n", file = "../sample_lists/lf_v_sanjo.txt")
 cat(frvlf$vcf_name, sep = "\n", file = "../sample_lists/lf_v_frhf.txt")
-cat(bothvlf$vcf_name, sep = "\n", file = "../sample_lists/lf_v_both.txt")
+cat(bothvlf$vcf_name, sep = "\n", file = "../sample_lists/lf_v_both.txt") 
+cat(frhspf_sj_lf$vcf_name, sep = "\n", file = "../sample_lists/all4.txt")
 
 # and we need to write out the ybins.  For this we can make a function
 write_ybins <- function(x, path = "tmp.txt") {
@@ -72,5 +77,5 @@ dir.create("../ybins")
 write_ybins(sjvlf, "../ybins/lf_v_sanjo.txt")
 write_ybins(frvlf, "../ybins/lf_v_frhf.txt")
 write_ybins(bothvlf, "../ybins/lf_v_both.txt")
-
+write_ybins(frhspf_sj_lf, "../ybins/all4.txt")
 ```

@@ -30,6 +30,9 @@ bcf:
       lf_v_both:
         path: "example-configs/Otsh_v1.0-fall-v-late-fall/sample_lists/lf_v_both.txt"
         ybin: "example-configs/Otsh_v1.0-fall-v-late-fall/ybins/lf_v_both.txt"
+      all4:
+        path: "example-configs/Otsh_v1.0-fall-v-late-fall/sample_lists/all4.txt"
+        ybin: "example-configs/Otsh_v1.0-fall-v-late-fall/ybins/all4.txt"
  
 
 # same thing here, we can define different sets of bcftools filters
@@ -86,4 +89,5 @@ targets:
     - ["std", "lf_v_sanjo", "dummy"]
     - ["std", "lf_v_frhf", "dummy"]
     - ["std", "lf_v_both", "dummy"]
+    - ["std", "all4", "dummy"]
 
