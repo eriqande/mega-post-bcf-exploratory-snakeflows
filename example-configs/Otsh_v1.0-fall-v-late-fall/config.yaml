@@ -27,7 +27,7 @@ bcf:
       lf_v_frhf:
         path: "example-configs/Otsh_v1.0-fall-v-late-fall/sample_lists/lf_v_frhf.txt"
         ybin: "example-configs/Otsh_v1.0-fall-v-late-fall/ybins/lf_v_frhf.txt"
-      lf_v_sanjo:
+      lf_v_both:
         path: "example-configs/Otsh_v1.0-fall-v-late-fall/sample_lists/lf_v_both.txt"
         ybin: "example-configs/Otsh_v1.0-fall-v-late-fall/ybins/lf_v_both.txt"
  
@@ -82,13 +82,8 @@ params:
 # or possibly multiple filenames.
 
 targets:
-  pcangsd_plain: # this is here in case you just want to 
-    - ["cali", "all", "no_frills"]
-    - ["nz_arg", "all", "no_frills"]
-    - ["cali_nz_arg", "all", "no_frills"]
-  do_asso:
-    - ["cali_nz_arg", "cv_and_south", "age_cohort_4PCs"]
-    - ["cali_nz_arg", "cv_and_south", "age_cohort_2PCs"]
   do_asso_ybin:
-    - ["cali_nz_arg", "cv_and_south", "dummy"]
+    - ["std", "lf_v_sanjo", "dummy"]
+    - ["std", "lf_v_frhf", "dummy"]
+    - ["std", "lf_v_both", "dummy"]
 
