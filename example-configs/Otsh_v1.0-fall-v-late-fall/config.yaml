@@ -19,7 +19,7 @@ scaff_group_path: example-configs/Otsh_v1.0-fall-v-late-fall/scaffold_groups.tsv
 # studies in ANGSD, these go here as the dotsample.
 bcf:
   cal_chinook:
-    path: "data/california.vcf.gz"  # GET FILE AND PUT PATH IN
+    path: "data/Cal-Chinook-160.vcf.gz"  # GET FILE AND PUT PATH IN
     sample_subsets:
       lf_v_sanjo:
         path: "example-configs/Otsh_v1.0-fall-v-late-fall/sample_lists/lf_v_sanjo.txt"
