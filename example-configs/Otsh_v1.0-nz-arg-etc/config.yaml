@@ -28,8 +28,8 @@ bcf:
     sample_subsets:
       all:
         path: "example-configs/Otsh_v1.0-nz-arg-etc/sample_lists/nz-arg_samples.txt"
-      nz_only: "example-configs/Otsh_v1.0-nz-arg-etc/sample_lists/nz-only.txt"
-        path: 
+      nz_only: 
+        path: "example-configs/Otsh_v1.0-nz-arg-etc/sample_lists/nz-only.txt"
     
   cali_nz_arg_merged:
     path: "data/cali-nz-arg-merged.vcf.gz"
