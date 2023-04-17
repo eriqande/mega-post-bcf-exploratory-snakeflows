@@ -111,15 +111,22 @@ params:
 # The idea here is that each of these triples can be used to define a file name
 # or possibly multiple filenames.
 
+
+
+# targets:
+#   pcangsd_plain: # this is here in case you just want to do a simple PCA
+#     - ["cali", "all", "no_frills"]
+#     - ["nz_arg", "all", "no_frills"]
+#     - ["cali_nz_arg", "all", "no_frills"]
+#     - ["nz_arg", "nz_only", "no_frills"]
+#   do_asso:
+#     - ["cali_nz_arg", "cv_and_south", "age_cohort_4PCs"]
+#     - ["cali_nz_arg", "cv_and_south", "age_cohort_2PCs"]
+#   do_asso_ybin:
+#     - ["cali_nz_arg", "cv_and_south", "dummy"]
+# 
+
+
 targets:
   pcangsd_plain: # this is here in case you just want to do a simple PCA
-    - ["cali", "all", "no_frills"]
-    - ["nz_arg", "all", "no_frills"]
-    - ["cali_nz_arg", "all", "no_frills"]
     - ["nz_arg", "nz_only", "no_frills"]
-  do_asso:
-    - ["cali_nz_arg", "cv_and_south", "age_cohort_4PCs"]
-    - ["cali_nz_arg", "cv_and_south", "age_cohort_2PCs"]
-  do_asso_ybin:
-    - ["cali_nz_arg", "cv_and_south", "dummy"]
-
