@@ -8,8 +8,8 @@
 # reference genome and thus to the same scaffold groups file.
 # These are identified here:
 fai_path: example-configs/Otsh_v1.0-nz-arg-etc/Otsh_v1.0_genomic.fna.fai
-scaff_group_path: example-configs/Otsh_v1.0-nz-arg-etc/scaff_groups_chroms_only.tsv
-
+#scaff_group_path: example-configs/Otsh_v1.0-nz-arg-etc/scaff_groups_chroms_only.tsv
+scaff_group_path: example-configs/Otsh_v1.0-nz-arg-etc/scaffs_chrom_only_with28.tsv
 
 
 # this is the short name and the path to the BCF file that will be used
