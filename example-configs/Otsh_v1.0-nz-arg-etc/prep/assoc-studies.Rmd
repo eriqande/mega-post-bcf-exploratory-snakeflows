@@ -38,3 +38,20 @@ write_lines(samples1$ID, file = "../sample_lists/cv-and-south-hemi.txt")
 dir.create("../dot-samples", showWarnings = FALSE, recursive = TRUE)
 write_tsv(dotsample1, file = "../dot-samples/cv-and-south-hemi.tsv")
 ```
+
+
+Also, we want to get a sample list of only the NZ fish:
+```{r}
+NZ_only <- meta %>%
+  filter(str_detect(vcf_name, "^T")) %>%
+  filter(!(Population %in% c(
+    "Rio de las Vueltas",
+    "Rio De Las Vueltas",
+    "Sacramento River",
+    "Santa Cruz Rive"
+  )))
+
+NZ_only %>%
+  pull(vcf_name) %>%
+  cat(., sep = "\n", file = "../sample_lists/nz-only.txt")
+```

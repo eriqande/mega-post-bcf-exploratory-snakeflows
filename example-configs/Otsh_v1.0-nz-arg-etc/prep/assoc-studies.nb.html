@@ -1682,23 +1682,17 @@ overflow-y: auto;
 border: 1px solid #ddd;
 border-radius: 4px;
 }
-.tabset-dropdown > .nav-tabs > li.active:before {
-content: "";
+.tabset-dropdown > .nav-tabs > li.active:before, .tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+content: "\e259";
 font-family: 'Glyphicons Halflings';
 display: inline-block;
 padding: 10px;
 border-right: 1px solid #ddd;
 }
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
-content: "";
-border: none;
-}
-.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
-content: "";
+content: "\e258";
 font-family: 'Glyphicons Halflings';
-display: inline-block;
-padding: 10px;
-border-right: 1px solid #ddd;
+border: none;
 }
 .tabset-dropdown > .nav-tabs > li.active {
 display: block;
@@ -1764,6 +1758,15 @@ are going to just do an exploratory GWAS or two. We just need to prep
 some sample lists and some dot-sample files.</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxubGlicmFyeSh0aWR5dmVyc2UpXG5cbiMgdGhlcmUgaXMgb25lIHNhbXBsZSB0aGF0IGlzIHNvbWVob3cgaW4gdGhpcyB0d2ljZSBzbyB3ZVxuIyBmaWx0ZXIgaXQgb3V0OlxubWV0YSA8LSByZWFkX2NzdihcIkNoaW5vb2tfbWVyZ2VkX21ldGFkYXRhLmNzdlwiKSAlPiVcbiAgZmlsdGVyKCFkdXBsaWNhdGVkKHZjZl9uYW1lKSlcblxuYGBgIn0= -->
+<pre class="r"><code>library(tidyverse)
+
+# there is one sample that is somehow in this twice so we
+# filter it out:
+meta &lt;- read_csv(&quot;Chinook_merged_metadata.csv&quot;) %&gt;%
+  filter(!duplicated(vcf_name))
+</code></pre>
+<!-- rnb-source-end -->
 <!-- rnb-chunk-end -->
 <!-- rnb-text-begin -->
 <div id="cv-vs-all-southern-hemi" class="section level2">
@@ -1771,17 +1774,56 @@ some sample lists and some dot-sample files.</p>
 <p>Let’s compare the non-winter-run CV to the NZ and Arg together:</p>
 <!-- rnb-text-end -->
 <!-- rnb-chunk-begin -->
-<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxud3JpdGVfdHN2KGRvdHNhbXBsZTEsIGZpbGUgPSBcIi4uL2RvdC1zYW1wbGVzL2N2LWFuZC1zb3V0aC1oZW1pLnRzdlwiKVxuXG5gYGAifQ== -->
-<pre class="r"><code>write_tsv(dotsample1, file = &quot;../dot-samples/cv-and-south-hemi.tsv&quot;)
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuc2FtcGxlczEgPC0gbWV0YSAlPiVcbiAgZmlsdGVyKCFzdHJfZGV0ZWN0KFBvcHVsYXRpb24sIFwiVHJpbml0eXxTYWxtb25cIikpICU+JVxuICBmaWx0ZXIocnVuX3R5cGUgIT0gXCJXaW50ZXJcIikgJT4lXG4gIHNlbGVjdCh2Y2ZfbmFtZSkgJT4lXG4gIHJlbmFtZShJRCA9IHZjZl9uYW1lKVxuXG50bXAgPC0gc2FtcGxlczEgJT4lXG4gIG11dGF0ZShoZW1pID0gYXMuY2hhcmFjdGVyKGlmZWxzZShzdHJfZGV0ZWN0KElELCBcIl5EUFwiKSwgMCwgMSkpKSAgIyBoZW1pc3BoZXJlIHNvdXRoID0gMSwgbm9ydGggPSAwXG5cbmRvdHNhbXBsZTEgPC0gYmluZF9yb3dzKHRpYmJsZShJRCA9IFwiMFwiLCBoZW1pID0gXCJCXCIpLCB0bXApXG5cbndyaXRlX2xpbmVzKHNhbXBsZXMxJElELCBmaWxlID0gXCIuLi9zYW1wbGVfbGlzdHMvY3YtYW5kLXNvdXRoLWhlbWkudHh0XCIpXG5kaXIuY3JlYXRlKFwiLi4vZG90LXNhbXBsZXNcIiwgc2hvd1dhcm5pbmdzID0gRkFMU0UsIHJlY3Vyc2l2ZSA9IFRSVUUpXG53cml0ZV90c3YoZG90c2FtcGxlMSwgZmlsZSA9IFwiLi4vZG90LXNhbXBsZXMvY3YtYW5kLXNvdXRoLWhlbWkudHN2XCIpXG5gYGAifQ== -->
+<pre class="r"><code>samples1 &lt;- meta %&gt;%
+  filter(!str_detect(Population, &quot;Trinity|Salmon&quot;)) %&gt;%
+  filter(run_type != &quot;Winter&quot;) %&gt;%
+  select(vcf_name) %&gt;%
+  rename(ID = vcf_name)
+
+tmp &lt;- samples1 %&gt;%
+  mutate(hemi = as.character(ifelse(str_detect(ID, &quot;^DP&quot;), 0, 1)))  # hemisphere south = 1, north = 0
+
+dotsample1 &lt;- bind_rows(tibble(ID = &quot;0&quot;, hemi = &quot;B&quot;), tmp)
+
+write_lines(samples1$ID, file = &quot;../sample_lists/cv-and-south-hemi.txt&quot;)
+dir.create(&quot;../dot-samples&quot;, showWarnings = FALSE, recursive = TRUE)
+write_tsv(dotsample1, file = &quot;../dot-samples/cv-and-south-hemi.tsv&quot;)</code></pre>
+<!-- rnb-source-end -->
+<!-- rnb-chunk-end -->
+<!-- rnb-text-begin -->
+<p>Also, we want to get a sample list of only the NZ fish:</p>
+<!-- rnb-text-end -->
+<!-- rnb-chunk-begin -->
+<!-- rnb-source-begin eyJkYXRhIjoiYGBgclxuTlpfb25seSAlPiVcbiAgcHVsbCh2Y2ZfbmFtZSkgJT4lXG4gIGNhdCguLCBzZXAgPSBcIlxcblwiKVxuXG5gYGAifQ== -->
+<pre class="r"><code>NZ_only %&gt;%
+  pull(vcf_name) %&gt;%
+  cat(., sep = &quot;\n&quot;)
 </code></pre>
 <!-- rnb-source-end -->
-<!-- rnb-output-begin eyJkYXRhIjoiRXJyb3IgaW4gaXMuZGF0YS5mcmFtZSh4KSA6IG9iamVjdCAnZG90c2FtcGxlMScgbm90IGZvdW5kXG4ifQ== -->
-<pre><code>Error in is.data.frame(x) : object &#39;dotsample1&#39; not found</code></pre>
+<!-- rnb-output-begin eyJkYXRhIjoiVDE2OTgyNlxuVDE2OTgzMlxuVDE2OTgzNFxuVDE2OTgzN1xuVDE2OTgzOFxuVDE2OTg0OVxuVDE2OTg2OFxuVDE2OTg4M1xuVDE2OTg5N1xuVDE2OTkwMFxuVDE2OTkwNlxuVDE2OTkwN1xuVDE2OTkxM1xuVDIwNjE4NFxuVDE2OTg1N1xuVDE2OTg4MFxuVDE2OTg4OFxuIn0= -->
+<pre><code>T169826
+T169832
+T169834
+T169837
+T169838
+T169849
+T169868
+T169883
+T169897
+T169900
+T169906
+T169907
+T169913
+T206184
+T169857
+T169880
+T169888</code></pre>
 <!-- rnb-output-end -->
 <!-- rnb-chunk-end -->
 </div>
 
-<div id="rmd-source-code">LS0tCnRpdGxlOiAiUHJlcHBpbmcgZm9yIGFzc29jaWF0aW9uIHN0dWRpZXMiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCkV2ZW4gdGhvdWdoIHRoZXJlIGlzIGNsZWFybHkgYW4gZWZmZWN0IG9mIHNlcXVlbmNpbmcgcGxhdGZvcm0gKHRoYXQgYWN0dWFsbHkKc2hvd3MgdXAgb24gUEMtMSkgYmV0d2VlbiB0aGUgSGktU2VxIGFuZCB0aGUgTm92YS1TZXEgZGF0YSwgd2UgYXJlIGdvaW5nIHRvCmp1c3QgZG8gYW4gZXhwbG9yYXRvcnkgR1dBUyBvciB0d28uICBXZSBqdXN0IG5lZWQgdG8gcHJlcCBzb21lIHNhbXBsZSBsaXN0cwphbmQgc29tZSBkb3Qtc2FtcGxlIGZpbGVzLgoKYGBge3IsIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9CmxpYnJhcnkodGlkeXZlcnNlKQoKIyB0aGVyZSBpcyBvbmUgc2FtcGxlIHRoYXQgaXMgc29tZWhvdyBpbiB0aGlzIHR3aWNlIHNvIHdlCiMgZmlsdGVyIGl0IG91dDoKbWV0YSA8LSByZWFkX2NzdigiQ2hpbm9va19tZXJnZWRfbWV0YWRhdGEuY3N2IikgJT4lCiAgZmlsdGVyKCFkdXBsaWNhdGVkKHZjZl9uYW1lKSkKCmBgYAoKIyMgQ1YgdnMgYWxsIHNvdXRoZXJuIEhlbWkKCkxldCdzIGNvbXBhcmUgdGhlIG5vbi13aW50ZXItcnVuIENWIHRvIHRoZSBOWiBhbmQgQXJnIHRvZ2V0aGVyOgoKYGBge3J9CnNhbXBsZXMxIDwtIG1ldGEgJT4lCiAgZmlsdGVyKCFzdHJfZGV0ZWN0KFBvcHVsYXRpb24sICJUcmluaXR5fFNhbG1vbiIpKSAlPiUKICBmaWx0ZXIocnVuX3R5cGUgIT0gIldpbnRlciIpICU+JQogIHNlbGVjdCh2Y2ZfbmFtZSkgJT4lCiAgcmVuYW1lKElEID0gdmNmX25hbWUpCgp0bXAgPC0gc2FtcGxlczEgJT4lCiAgbXV0YXRlKGhlbWkgPSBhcy5jaGFyYWN0ZXIoaWZlbHNlKHN0cl9kZXRlY3QoSUQsICJeRFAiKSwgMCwgMSkpKSAgIyBoZW1pc3BoZXJlIHNvdXRoID0gMSwgbm9ydGggPSAwCgpkb3RzYW1wbGUxIDwtIGJpbmRfcm93cyh0aWJibGUoSUQgPSAiMCIsIGhlbWkgPSAiQiIpLCB0bXApCgp3cml0ZV9saW5lcyhzYW1wbGVzMSRJRCwgZmlsZSA9ICIuLi9zYW1wbGVfbGlzdHMvY3YtYW5kLXNvdXRoLWhlbWkudHh0IikKZGlyLmNyZWF0ZSgiLi4vZG90LXNhbXBsZXMiLCBzaG93V2FybmluZ3MgPSBGQUxTRSwgcmVjdXJzaXZlID0gVFJVRSkKd3JpdGVfdHN2KGRvdHNhbXBsZTEsIGZpbGUgPSAiLi4vZG90LXNhbXBsZXMvY3YtYW5kLXNvdXRoLWhlbWkudHN2IikKYGBg</div>
+<div id="rmd-source-code">LS0tCnRpdGxlOiAiUHJlcHBpbmcgZm9yIGFzc29jaWF0aW9uIHN0dWRpZXMiCm91dHB1dDogaHRtbF9ub3RlYm9vawotLS0KCkV2ZW4gdGhvdWdoIHRoZXJlIGlzIGNsZWFybHkgYW4gZWZmZWN0IG9mIHNlcXVlbmNpbmcgcGxhdGZvcm0gKHRoYXQgYWN0dWFsbHkKc2hvd3MgdXAgb24gUEMtMSkgYmV0d2VlbiB0aGUgSGktU2VxIGFuZCB0aGUgTm92YS1TZXEgZGF0YSwgd2UgYXJlIGdvaW5nIHRvCmp1c3QgZG8gYW4gZXhwbG9yYXRvcnkgR1dBUyBvciB0d28uICBXZSBqdXN0IG5lZWQgdG8gcHJlcCBzb21lIHNhbXBsZSBsaXN0cwphbmQgc29tZSBkb3Qtc2FtcGxlIGZpbGVzLgoKYGBge3IsIG1lc3NhZ2U9RkFMU0UsIHdhcm5pbmc9RkFMU0V9CmxpYnJhcnkodGlkeXZlcnNlKQoKIyB0aGVyZSBpcyBvbmUgc2FtcGxlIHRoYXQgaXMgc29tZWhvdyBpbiB0aGlzIHR3aWNlIHNvIHdlCiMgZmlsdGVyIGl0IG91dDoKbWV0YSA8LSByZWFkX2NzdigiQ2hpbm9va19tZXJnZWRfbWV0YWRhdGEuY3N2IikgJT4lCiAgZmlsdGVyKCFkdXBsaWNhdGVkKHZjZl9uYW1lKSkKCmBgYAoKIyMgQ1YgdnMgYWxsIHNvdXRoZXJuIEhlbWkKCkxldCdzIGNvbXBhcmUgdGhlIG5vbi13aW50ZXItcnVuIENWIHRvIHRoZSBOWiBhbmQgQXJnIHRvZ2V0aGVyOgoKYGBge3J9CnNhbXBsZXMxIDwtIG1ldGEgJT4lCiAgZmlsdGVyKCFzdHJfZGV0ZWN0KFBvcHVsYXRpb24sICJUcmluaXR5fFNhbG1vbiIpKSAlPiUKICBmaWx0ZXIocnVuX3R5cGUgIT0gIldpbnRlciIpICU+JQogIHNlbGVjdCh2Y2ZfbmFtZSkgJT4lCiAgcmVuYW1lKElEID0gdmNmX25hbWUpCgp0bXAgPC0gc2FtcGxlczEgJT4lCiAgbXV0YXRlKGhlbWkgPSBhcy5jaGFyYWN0ZXIoaWZlbHNlKHN0cl9kZXRlY3QoSUQsICJeRFAiKSwgMCwgMSkpKSAgIyBoZW1pc3BoZXJlIHNvdXRoID0gMSwgbm9ydGggPSAwCgpkb3RzYW1wbGUxIDwtIGJpbmRfcm93cyh0aWJibGUoSUQgPSAiMCIsIGhlbWkgPSAiQiIpLCB0bXApCgp3cml0ZV9saW5lcyhzYW1wbGVzMSRJRCwgZmlsZSA9ICIuLi9zYW1wbGVfbGlzdHMvY3YtYW5kLXNvdXRoLWhlbWkudHh0IikKZGlyLmNyZWF0ZSgiLi4vZG90LXNhbXBsZXMiLCBzaG93V2FybmluZ3MgPSBGQUxTRSwgcmVjdXJzaXZlID0gVFJVRSkKd3JpdGVfdHN2KGRvdHNhbXBsZTEsIGZpbGUgPSAiLi4vZG90LXNhbXBsZXMvY3YtYW5kLXNvdXRoLWhlbWkudHN2IikKYGBgCgoKQWxzbywgd2Ugd2FudCB0byBnZXQgYSBzYW1wbGUgbGlzdCBvZiBvbmx5IHRoZSBOWiBmaXNoOgpgYGB7cn0KTlpfb25seSA8LSBtZXRhICU+JQogIGZpbHRlcihzdHJfZGV0ZWN0KHZjZl9uYW1lLCAiXlQiKSkgJT4lCiAgZmlsdGVyKCEoUG9wdWxhdGlvbiAlaW4lIGMoCiAgICAiUmlvIGRlIGxhcyBWdWVsdGFzIiwKICAgICJSaW8gRGUgTGFzIFZ1ZWx0YXMiLAogICAgIlNhY3JhbWVudG8gUml2ZXIiLAogICAgIlNhbnRhIENydXogUml2ZSIKICApKSkKCk5aX29ubHkgJT4lCiAgcHVsbCh2Y2ZfbmFtZSkgJT4lCiAgY2F0KC4sIHNlcCA9ICJcbiIsIGZpbGUgPSAiLi4vc2FtcGxlX2xpc3RzL256LW9ubHkudHh0IikKYGBg</div>
 
 
 

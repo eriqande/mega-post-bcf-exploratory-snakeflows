@@ -28,6 +28,9 @@ bcf:
     sample_subsets:
       all:
         path: "example-configs/Otsh_v1.0-nz-arg-etc/sample_lists/nz-arg_samples.txt"
+      nz_only: "example-configs/Otsh_v1.0-nz-arg-etc/sample_lists/nz-only.txt"
+        path: 
+    
   cali_nz_arg_merged:
     path: "data/cali-nz-arg-merged.vcf.gz"
     sample_subsets:
@@ -109,10 +112,11 @@ params:
 # or possibly multiple filenames.
 
 targets:
-  pcangsd_plain: # this is here in case you just want to 
+  pcangsd_plain: # this is here in case you just want to do a simple PCA
     - ["cali", "all", "no_frills"]
     - ["nz_arg", "all", "no_frills"]
     - ["cali_nz_arg", "all", "no_frills"]
+    - ["nz_arg", "nz_only", "no_frills"]
   do_asso:
     - ["cali_nz_arg", "cv_and_south", "age_cohort_4PCs"]
     - ["cali_nz_arg", "cv_and_south", "age_cohort_2PCs"]
