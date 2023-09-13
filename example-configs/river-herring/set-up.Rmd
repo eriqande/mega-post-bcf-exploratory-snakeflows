@@ -1,0 +1,32 @@
+---
+title: "R Notebook"
+output: html_notebook
+---
+
+```{r}
+library(tidyverse)
+
+gen <- read_tsv("resources/genome.fasta.fai", col_names = FALSE)
+
+
+gen %>%
+  mutate(
+    row = 1:n(),
+    id = case_when(
+      row < 27 ~ sprintf("scaff_group_%03d", row),
+      TRUE ~ sprintf("scaff_group_027")
+    )
+  ) %>%
+  mutate(
+    chrom = X1,
+    start = 1,
+    stop = X2,
+    angsd_chrom = str_replace(chrom, "_", "-"),
+    mh_label = case_when(
+      row < 27 ~ as.character(row),
+      TRUE ~ "Unk-27"
+    )
+  ) %>% 
+  select(id:mh_label) %>%
+  write_tsv("scaff_groups.tsv")
+```
