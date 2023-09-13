@@ -7,8 +7,8 @@
 # every BCF file used here must correspond to the same
 # reference genome and thus to the same scaffold groups file.
 # These are identified here:
-fai_path: resources/genome.fasta.fai
-scaff_group_path: resources/scaff_groups.tsv
+fai_path: example-configs/river-herring/resources/genome.fasta.fai
+scaff_group_path: example-configs/river-herring/scaff_groups.tsv
 
 
 
