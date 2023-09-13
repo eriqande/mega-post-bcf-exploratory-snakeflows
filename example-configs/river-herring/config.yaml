@@ -22,7 +22,7 @@ bcf:
     path: "data/pass-maf-0.01.bcf"
     sample_subsets:
       all:
-        path: .test/sample_subsets/all.txt  
+        path: example-configs/river-herring/sample_subsets/all.txt  
  
 
 # same thing here, we can define different sets of bcftools filters
