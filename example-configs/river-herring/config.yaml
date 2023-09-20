@@ -22,7 +22,10 @@ bcf:
     path: "data/pass-maf-0.01.bcf"
     sample_subsets:
       all:
-        path: example-configs/river-herring/sample_subsets/all.txt  
+        path: example-configs/river-herring/sample_subsets/all.txt
+      topleft: # fish in the top left cluster
+        path: example-configs/river-herring/sample_subsets/top-left-cluster.txt
+        dotsample: example-configs/river-herring/data/anad-v-landlocked-top-left.tsv
  
 
 # same thing here, we can define different sets of bcftools filters
@@ -59,14 +62,10 @@ main_params:
 # analyses.
 params:
   do_asso:
-    age_cohort_2PCs:
+    anad_v_landlock_4PCs:
       angsd_opts: " -doMaf 4 -doAsso 4 "
-      whichPhe: " hemi "
-      whichCov: " cohort,PC-1,PC-2 "
-    age_cohort_4PCs:
-      angsd_opts: " -doMaf 4 -doAsso 4 "
-      whichPhe: " hemi "
-      whichCov: " cohort,PC-1,PC-2,PC-3,PC-4 "
+      whichPhe: " anad "
+      whichCov: " PC-1,PC-2,PC-3,PC-4 "
   pcangsd_plain:
     no_frills:
   do_asso_ybin:
@@ -89,6 +88,8 @@ params:
 targets:
   pcangsd_plain: # this is here in case you just want to do a simple PCA
     - ["standard", "all", "no_frills"]
+  do_asso:
+    - ["standard", "topleft", "anad_v_landlock_4PCs"]
 
 
 
