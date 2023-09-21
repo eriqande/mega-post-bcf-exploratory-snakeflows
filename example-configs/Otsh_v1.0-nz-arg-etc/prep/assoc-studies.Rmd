@@ -48,7 +48,7 @@ NZ_only <- meta %>%
     "Rio de las Vueltas",
     "Rio De Las Vueltas",
     "Sacramento River",
-    "Santa Cruz Rive"
+    "Santa Cruz River"
   )))
 
 NZ_only %>%

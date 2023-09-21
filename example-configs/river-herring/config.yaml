@@ -23,9 +23,10 @@ bcf:
     sample_subsets:
       all:
         path: example-configs/river-herring/sample_subsets/all.txt
+        dotsample: example-configs/river-herring/data/dot-samples/anadromous-admixbased.tsv
       topleft: # fish in the top left cluster
         path: example-configs/river-herring/sample_subsets/top-left-cluster.txt
-        dotsample: example-configs/river-herring/data/anad-v-landlocked-top-left.tsv
+        dotsample: example-configs/river-herring/data/dot-samples/anad-topleftonly-mapnpaca-based.tsv
  
 
 # same thing here, we can define different sets of bcftools filters
@@ -90,6 +91,7 @@ targets:
     - ["standard", "all", "no_frills"]
   do_asso:
     - ["standard", "topleft", "anad_v_landlock_4PCs"]
+    - ["standard", "all", "anad_v_landlock_4PCs"]
 
 
 
