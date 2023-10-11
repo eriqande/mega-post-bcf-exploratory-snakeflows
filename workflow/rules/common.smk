@@ -110,10 +110,10 @@ def expand_targets():
 	if "filtervcf" in targ:
 		for T in targ["filtervcf"]:
 			ret = ret + "results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_spec}/main.bcf".format(
-		bcf_id=config["main_params"][tl[0]]["bcf"],
-		bcfilt=config["main_params"][tl[0]]["filt"],
-		sampsub=tl[1],
-		thin_spec=config["main_params"][tl[0]]["thin_spec"])
+		bcf_id=config["main_params"][T[0]]["bcf"],
+		bcfilt=config["main_params"][T[0]]["filt"],
+		sampsub=T[1],
+		thin_spec=config["main_params"][T[0]]["thin_spec"])
 
 	return ret
 
