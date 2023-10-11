@@ -1,0 +1,38 @@
+---
+title: "Prep OSU VCF"
+output: html_notebook
+---
+
+
+
+```{r}
+library(tidyverse)
+
+
+scaff <- read_tsv("scaffold_groups.tsv") %>%
+  mutate(
+    start = 1,
+    stop = len,
+    angsd_chrom = str_replace(chrom, "_", "-"),
+    mh_label = "who-cares"
+  ) %>%
+  select(-len, -cumul)
+chrom <- read_tsv("chromosomes.tsv") %>%
+  mutate(
+    id = chrom, 
+    .before  = chrom
+  ) %>%
+  mutate(
+    start = 1,
+    stop = num_bases,
+    angsd_chrom = str_replace(chrom, "_", "-"),
+    mh_label = "who-cares"
+  ) %>%
+  select(-num_bases)
+
+
+both <- bind_rows(chrom, scaff) %>%
+  mutate(id = sprintf("scaff_group%04d", as.integer(factor(id, levels = unique(id)))))
+
+write_tsv(both, "../scaffold_groups.tsv")
+```
