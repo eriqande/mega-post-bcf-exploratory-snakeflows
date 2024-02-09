@@ -72,6 +72,10 @@ params:
       angsd_opts: " -doMaf 4 -doAsso 4 "
       whichPhe: " age "
       whichCov: " cohort,PC-1,PC-2,PC-3,PC-4 "
+  ngsadmix:
+      four_for_five:
+        reps: 4
+        kvals: [1, 2, 3, 4, 5]
 
 
 
@@ -89,11 +93,14 @@ params:
 # or possibly multiple filenames.
 
 targets:
+  ngsadmix:
+    - ["standard", "all", "four_for_five"]
   do_asso:
     - ["standard", "all", "age_cohort_4PCs"]
     - ["standard", "males", "age_cohort_4PCs"]
     - ["standard", "females", "age_cohort_4PCs"]
   beagle_gl: # this is here in case you just want to 
     - ["standard", "males", "dummy"]
+  
 
 

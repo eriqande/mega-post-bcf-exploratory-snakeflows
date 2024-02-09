@@ -47,9 +47,18 @@ wildcard_constraints:
 # of three things: [Main, SubSamp, Params]
 
 # this gives us the main starting path for any analysis and triplet
-def main_params_path(analysis, tl):
+# if writePS == True then it writes the param_set name.  Otherwise not.
+def main_params_path(analysis, tl, writePS = True, writeMAF = True):
 	tlists=config["targets"][analysis]
-	return "results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_spec}/{anal}/maf_{min_maf}/{param_set}".format(
+	if writePS:
+		base_path="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_spec}/{anal}/maf_{min_maf}/{param_set}"
+	else:
+		if writeMAF:
+			base_path="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_spec}/{anal}/maf_{min_maf}"
+		else:
+			base_path="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_spec}/{anal}"
+
+	return base_path.format(
 		bcf_id=config["main_params"][tl[0]]["bcf"],
 		bcfilt=config["main_params"][tl[0]]["filt"],
 		sampsub=tl[1],
@@ -57,6 +66,8 @@ def main_params_path(analysis, tl):
 		anal=analysis,
 		min_maf=config["main_params"][tl[0]]["maf"],
 		param_set=tl[2])
+
+
 
 # this gives us the main starting path for any analysis that doesn't have a param set
 def beagle_path(analysis, tl):
@@ -114,8 +125,36 @@ def expand_targets():
 		bcfilt=config["main_params"][T[0]]["filt"],
 		sampsub=T[1],
 		thin_spec=config["main_params"][T[0]]["thin_spec"])
+	if "ngsadmix" in targ:
+		for T in targ["ngsadmix"]:
+			mainp = main_params_path("ngsadmix", T, False)
+			kvals=config["params"]["ngsadmix"][T[2]]["kvals"]
+			R=config["params"]["ngsadmix"][T[2]]["reps"]
+			reps=list(range(1,R+1))
+			ret = expand(mainp + "/K_{K}_rep_{rep}/output.qopt", K=kvals, rep=reps) 
 
 	return ret
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
