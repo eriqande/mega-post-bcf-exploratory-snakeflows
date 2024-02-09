@@ -131,8 +131,7 @@ def expand_targets():
 			kvals=config["params"]["ngsadmix"][T[2]]["kvals"]
 			R=config["params"]["ngsadmix"][T[2]]["reps"]
 			reps=list(range(1,R+1))
-			ret = expand(mainp + "/K_{K}_rep_{rep}/output.qopt", K=kvals, rep=reps) 
-
+			ret = ret + expand(mainp + "/K_{K}_rep_{rep}/output.qopt", K=kvals, rep=reps)
 	return ret
 
 
