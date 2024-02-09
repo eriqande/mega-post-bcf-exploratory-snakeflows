@@ -8,3 +8,4 @@ resources/genome*
 .snakemake
 .DS_Store
 .beagle
+prep.nb.html

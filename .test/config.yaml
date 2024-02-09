@@ -44,7 +44,9 @@ bcftools_opts:
 pcangsd:
   url: git@github.com:eriqande/pcangsd.git
   version: 705ca4c19630ed9c2dd254b0bfd528b8ee25d5c0
-
+ngsAdmix:
+  url: git@github.com:aalbrechtsen/NGSadmix.git
+  version: a5cde0502ac1e1cfce994bc9fd72ef1813c262b6
 
 
 

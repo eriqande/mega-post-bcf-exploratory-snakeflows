@@ -9,6 +9,9 @@ include: "rules/common.smk"
 
 #localrules: write_bcf_regions
 
+rule tempboing:
+	input:
+
 
 rule all:
 	input:
@@ -22,6 +25,7 @@ include: "rules/formats.smk"
 include: "rules/pcangsd.smk"
 include: "rules/angsd.smk"
 include: "rules/beagle_regions.smk"
+include: "rules/NGSadmix.smk"
 
 
 
