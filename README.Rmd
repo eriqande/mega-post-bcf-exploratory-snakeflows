@@ -1,11 +1,111 @@
 ---
 title: "mega-post-bcf-exploratory-snakeflows"
 output: github_document
+author: "Eric C. Anderson"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+  
+  
+  
+_A Snakemake Workflow to Facilitate Exploratory (and Production) Analyses from
+Genomic Data Contained in a VCF/BCF File_
+
+
+  
+  
+  
+
+It has been my experience that once you get your VCF file, there is a lot of exploring
+and backtracking, and reconfiguring, and dropping of individuals, and grouping
+of samples, and alternative filterings, etc. that go on when working toward
+a final analysis.  This workflow
+represents an ongoing project of mine to facilitate a somewhat reproducible perspective
+on such analytical wanderings.
+
+At the same time, the workflow endeavors to parallelize steps that can be parallelized
+by doing calculations over chromosomes, or more generally, over "scaffold groups"
+each of which can be composed of a single chromosome, or of multiple scaffolds.  
+
+This lets you tackle analysis of fairly large VCF files on a local server in your
+lab, or even a laptop.  However, some analyses (like PCAngsd and NgsAdmix) require
+that all the data be loaded into memory at once.  So, for some of those steps you
+might need a full node.  In general, these analyses can work well running on
+a single node with 20 to 24 cores.
+
+Determing how data are filtered, and which analyses will ultimately be done
+is specified by a `config.yaml` file.  The place to go to see an example for
+all the different types of analyses available here is the `.test` directory
+which has a small data set and a config file and other resources that I
+use to test the logic of the workflows.  And also in the `example-configs` where
+I have other examples.  Clearly I need to make a central example data set in which
+anything that is implemented has its most up-to-date example in the `.test` directory.
+Maybe I can use the con-gen-csu chinook example for that...
+
+
+The configuration is set-up to accept several levels of options/parameters:
+
+1.  Specification of which BCF file to use:
+    - these are sublevels of `config["bcf"]`
+    - their keys determine the wildcard in `bcf_{bcf_id}` 
+1. Specification of filtering of sites in the VCF, via bcftools (`bcftools_opts`).
+    - sublevels of `config[bcftools_opts]`
+    - their keys determine the wildcards in `filt_{bcfilt}`
+
+These two get wrapped up into a set of `main_params` that describe how the
+VCF file is initially filtered and thinned, etc. At this point we can add
+a specification for thinning level, too.  And also for further downstream
+MAF filtering.  See for example:
+
+```yaml
+main_params:
+  standard:
+    bcf: testy
+    filt: snps05
+    thin_spec: "0_0"
+    maf: 0.05
+
+```
+
+
+Then, there is an additional level of options/parameters that describe
+which individuals remain in the analysis.  These are specified as a
+subset of each bcf file in the config, under `sample_subsets`.
+
+
+Finally, for whatever analysis you would like to do, the `config["params"]` section
+holds though.
+
+## Specifying targets
+
+Example:
+```yaml
+targets:
+  do_asso:
+    - ["standard", "all", "age_cohort_4PCs"]
+    - ["standard", "males", "age_cohort_4PCs"]
+    - ["standard", "females", "age_cohort_4PCs"]
+  beagle_gl: # this is here in case you just want to 
+    - ["standard", "males", "dummy"]
+  ngsadmix:
+    - ["standard", "all", "four_for_five"]
+
+```
+
+
+## Example wildcarded path:
+
+```{python}
+"results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/{param_set}/out.args"
+```
+
+
+
+
+## Boneyard
 
 I am just starting to put this together.  The basic idea is that when exploring
 NGS data that comes to you in a BCF file, there are lots of ways you might want to

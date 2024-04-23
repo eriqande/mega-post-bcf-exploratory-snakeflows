@@ -1,25 +1,116 @@
 mega-post-bcf-exploratory-snakeflows
 ================
+Eric C. Anderson
+
+*A Snakemake Workflow to Facilitate Exploratory (and Production)
+Analyses from Genomic Data Contained in a VCF/BCF File*
+
+It has been my experience that once you get your VCF file, there is a
+lot of exploring and backtracking, and reconfiguring, and dropping of
+individuals, and grouping of samples, and alternative filterings, etc.
+that go on when working toward a final analysis. This workflow
+represents an ongoing project of mine to facilitate a somewhat
+reproducible perspective on such analytical wanderings.
+
+At the same time, the workflow endeavors to parallelize steps that can
+be parallelized by doing calculations over chromosomes, or more
+generally, over “scaffold groups” each of which can be composed of a
+single chromosome, or of multiple scaffolds.
+
+This lets you tackle analysis of fairly large VCF files on a local
+server in your lab, or even a laptop. However, some analyses (like
+PCAngsd and NgsAdmix) require that all the data be loaded into memory at
+once. So, for some of those steps you might need a full node. In
+general, these analyses can work well running on a single node with 20
+to 24 cores.
+
+Determing how data are filtered, and which analyses will ultimately be
+done is specified by a `config.yaml` file. The place to go to see an
+example for all the different types of analyses available here is the
+`.test` directory which has a small data set and a config file and other
+resources that I use to test the logic of the workflows. And also in the
+`example-configs` where I have other examples. Clearly I need to make a
+central example data set in which anything that is implemented has its
+most up-to-date example in the `.test` directory. Maybe I can use the
+con-gen-csu chinook example for that…
+
+The configuration is set-up to accept several levels of
+options/parameters:
+
+1.  Specification of which BCF file to use:
+    - these are sublevels of `config["bcf"]`
+    - their keys determine the wildcard in `bcf_{bcf_id}`
+2.  Specification of filtering of sites in the VCF, via bcftools
+    (`bcftools_opts`).
+    - sublevels of `config[bcftools_opts]`
+    - their keys determine the wildcards in `filt_{bcfilt}`
+
+These two get wrapped up into a set of `main_params` that describe how
+the VCF file is initially filtered and thinned, etc. At this point we
+can add a specification for thinning level, too. And also for further
+downstream MAF filtering. See for example:
+
+``` yaml
+main_params:
+  standard:
+    bcf: testy
+    filt: snps05
+    thin_spec: "0_0"
+    maf: 0.05
+```
+
+Then, there is an additional level of options/parameters that describe
+which individuals remain in the analysis. These are specified as a
+subset of each bcf file in the config, under `sample_subsets`.
+
+Finally, for whatever analysis you would like to do, the
+`config["params"]` section holds though.
+
+## Specifying targets
+
+Example:
+
+``` yaml
+targets:
+  do_asso:
+    - ["standard", "all", "age_cohort_4PCs"]
+    - ["standard", "males", "age_cohort_4PCs"]
+    - ["standard", "females", "age_cohort_4PCs"]
+  beagle_gl: # this is here in case you just want to 
+    - ["standard", "males", "dummy"]
+  ngsadmix:
+    - ["standard", "all", "four_for_five"]
+```
+
+## Example wildcarded path:
+
+``` python
+"results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/{param_set}/out.args"
+```
+
+    ## 'results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/{param_set}/out.args'
+
+## Boneyard
 
 I am just starting to put this together. The basic idea is that when
 exploring NGS data that comes to you in a BCF file, there are lots of
 ways you might want to tweak it in the process. For example:
 
--   Use different BCF files
--   Use different subsets of individuals
--   Use different filtering criteria
--   Thin the number of markers to a different level
--   Thin the number of markers to the same level, but do different
-    randomly sampled replicates of that.
+- Use different BCF files
+- Use different subsets of individuals
+- Use different filtering criteria
+- Thin the number of markers to a different level
+- Thin the number of markers to the same level, but do different
+  randomly sampled replicates of that.
 
 On top of that, once you start analyzing those data you will want to try
 different things:
 
--   Different values of K with ngsAdmix
--   Different replicate runs of ngsAdmix
--   Different parameter settings of other packages
--   Some you will want to break over chromosomes to parallelize
--   Others, you can’t break over chromosomes, etc.
+- Different values of K with ngsAdmix
+- Different replicate runs of ngsAdmix
+- Different parameter settings of other packages
+- Some you will want to break over chromosomes to parallelize
+- Others, you can’t break over chromosomes, etc.
 
 So, these are all just the things I am thinking about as I start
 noodling around with a few things here.
@@ -30,3 +121,193 @@ something like this for the basic BCF maneuvers:
 ``` python
 "bcf_{bcf_file}/samp-sub_{sample_subset}/filt_{filter_crit}/tf_{thinning_factor}/tf-seed_{thin_factor_seed}/"
 ```
+
+But, now that I think about it, I’d say the thinning factors should be
+part of the filtering criteria. So, instead, the basic structure would
+be:
+
+``` python
+bcf_{bcf_file}/thin_{thin_int}_{thin_start}/samp-sub_{sample_subset}/filt_{filter_crit}/
+```
+
+My idea for these wildcards is, then:
+
+- `{bcf_file}` is the tag given in a TSV file to a path to a BCF
+- `{thin_int}` and `{thin_start}` These are there for doing simple
+  deterministic thinning of the file, starting at variant `thin_start`
+  and then taking every `thin_int`-th marker after that. If either of
+  them is 0, there is no thinning done.
+- `{sample_subset}` is the name given to a subset of samples in the BCF
+  file. The actual samples themselves are given in a file, typically
+  `config/sample_subsets/{sample_subset}.txt`, that can be read easily
+  by bcftools or vcftools. The exact location of the `sample_subsets`
+  directory will be given in config.yaml.
+- `{filter_crit}` will match the ID line in a TSV file that has other
+  columns, bcftools and vcftools, in which the relevant filtering option
+  values are given. Replicates of thinning can be given with IDs like
+  “FILT-1”, “FILT-2”, and so forth.
+
+Well, that is enough theory for now. We should probably start building
+some things up.
+
+Hey! For parallelizing over genomic regions I am just going to have a
+single `scaffold_groups.tsv` file that includes both chromosomes and
+scaffolds. i.e. some scaffold groups might include just a single
+chromosome.
+
+News Flash! The path to that file is going to be a column in the
+`bcfs.tsv`, because we might have different BCFs that are mapped to
+different genomes, etc. Also, there should be a column that gives the
+path of the indexed genome, for some ANGSD applications I do believe.
+
+## Required files
+
+- `scaffold_groups.tsv`: two columns, `id` and `chrom`, **in that
+  order**. Each row is a chromosome from the reference genome, in the
+  order that they appear in the genome.
+
+## Revamping this all
+
+I decided that it would be better to have all the filtering up front in
+bcftools, and then we can do thinning from there. Complete rewrite, but
+I think it will serve us better.
+
+## Beagle_regions
+
+I want to make a quick workflow for running beagle-4 to phase small
+regions of chromosomes from specified subsets of individuals.
+
+This is quite different from what we have done to date, since we don’t
+need to process the entire BCF file by scaffold. So, it will be a little
+separate from what we did previously, but it still seems like we have a
+good framework here to keep going on.
+
+This will be developed within `example-configs/rockfish-beagle-regions`
+
+We don’t really need a scaffold file for this, so I will just make a
+dummy there.
+
+## Development
+
+### Wildcards in play at the moment
+
+- `bcf_file`
+- `scaff_grp`
+- `sample_subset`
+- `bcftools_opts`
+
+### Test data set
+
+We could use a decent test data set for this. I have 480-something
+chinook, filtered to maf 0.01 that is about 31 Gb, and has around 14
+million variants in it. If we sampled at a rate of 0.0068 we would end
+up with about 100,000 markers, but that would still be about 210 Mb. So,
+let’s cut it down to 10,000 markers and around 22 Mb.
+
+``` sh
+mamba create -n vcflib-1.0.3 -c bioconda vcflib
+conda activate vcflib-1.0.3
+module load bio/bcftools
+
+bcftools view pass-maf-0.01.bcf | vcfrandomsample -r 0.00068 | bcftools view -Ob > /tmp/test.bcf
+```
+
+Ha! That is abominably slow! Granted it is streaming through the whole
+file to pick out less than 1 in a 1000.
+
+So, while waiting for that, I try it a different way:
+
+``` sh
+# print every 1000-th marker to a file:
+ bcftools query -f '%CHROM\t%POS\n' pass-maf-0.01.bcf | awk 'NR%1000==0' > /tmp/get-these.txt
+ # that should get us about 14000 markers.
+ 
+# then, I will take only half of those (get us down to about 7000 markers)
+awk 'NR%2==0' get-these.txt > markers.txt
+
+# and then we can access them via the index with the -R option
+bcftools view -Ob  -R /tmp/markers.txt  pass-maf-0.01.bcf  > ~/test.bcf
+```
+
+That got done by the time the vcflib streaming approach was still on
+marker 1000. OK…,let’s here it for log2N binary search of indexed BCF
+files.
+
+The resulting BCF file is 19 Mb. Perhaps still too big for a real .test
+data set, but I can start playing with it now on my laptop, and on
+SEDNA.
+
+### scaff groups for it
+
+I am going to make these from the chromosomes and scaff groups.
+
+``` r
+library(tidyverse)
+```
+
+    ## ── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+    ## ✔ dplyr     1.1.4     ✔ readr     2.1.4
+    ## ✔ forcats   1.0.0     ✔ stringr   1.5.1
+    ## ✔ ggplot2   3.4.4     ✔ tibble    3.2.1
+    ## ✔ lubridate 1.9.3     ✔ tidyr     1.3.0
+    ## ✔ purrr     1.0.2     
+    ## ── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+    ## ✖ dplyr::filter() masks stats::filter()
+    ## ✖ dplyr::lag()    masks stats::lag()
+    ## ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+
+``` r
+chrom <- read_tsv("~/Documents/projects/yukon-chinookomes/chromosomes.tsv") %>%
+  mutate(id = as.character(1:n(), .before = chrom)
+) %>%
+  rename(stop = num_bases)
+sg <- read_tsv("~/Documents/projects/yukon-chinookomes/scaffold_groups.tsv") %>%
+  select(id, chrom, len) %>%
+  rename(stop = len)
+
+both <- bind_rows(chrom, sg) %>%
+  mutate(
+    id2 = sprintf("scaff_grp_%04d", as.integer(factor(id, levels = unique(id))))
+  ) %>%
+  mutate(id = id2) %>%
+  mutate(start = 1) %>%
+  select(id, chrom, start, stop)
+
+write_tsv(both, ".test/bcf/test.bcf.scaff_groups.tsv")
+```
+
+### beagle3_glikes
+
+### pcangsd environment
+
+This is just a not here that pcangsd on github comes with
+`environment.yaml` which looks like this:
+
+``` yaml
+name: pcangsd
+channels:
+    - defaults
+dependencies:
+    - python>=3.6
+    - numpy
+    - scipy
+    - cython
+```
+
+If you create that environment and then activate it and run:
+
+``` sh
+git clone https://github.com/Rosemeis/pcangsd.git
+cd pcangsd
+python setup.py build_ext --inplace
+pip3 install -e .
+```
+
+as directed on the github page, it installs pcangsd into the the conda
+environment that was created. So, we should be able to have a flag
+dependency for each of the rules using pcangsd that does those steps to
+prepare the environment, and then we should be able to use it just as we
+would any other snakemake rule-specific environment.
+
+I might want to make sure it is using the same python version as the
+enclosing snakemake environment…
