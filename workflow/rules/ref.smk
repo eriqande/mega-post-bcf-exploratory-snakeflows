@@ -11,22 +11,22 @@
 # that would be suitable for changing the chromosome names in a bcf
 # file using bcftools rename-chrs.
 rule angsd_chromosome_names:
-	input:
-		config["fai_path"]
-	output:
-		fai="{p}-ANGSD".format(p=config["fai_path"]),
-		angsd_second="{p}-angsd-names-second.tsv".format(p=config["fai_path"]),
-		angsd_first="{p}-angsd-names-first.tsv".format(p=config["fai_path"]),
-	log:
-		"results/logs/angsd_chromosome_names/log.txt"
-	shell:
-		" (                                      "
-		" awk '                                  "
-		"   BEGIN {{OFS=\"\\t\"}}                "
-		"   {{ gsub(/_/, \"-\", $1); print $0}}  "
-		" ' {input} > {output.fai} &&            "
-		"  paste {input} {output.fai} | cut -f 1,6 > {output.angsd_second} && "
-		"  paste {output.fai} {input} | cut -f 1,6 > {output.angsd_first}     "
-		" )  2> {log}                            "
+    input:
+        config["fai_path"]
+    output:
+        fai="{p}-ANGSD".format(p=config["fai_path"]),
+        angsd_second="{p}-angsd-names-second.tsv".format(p=config["fai_path"]),
+        angsd_first="{p}-angsd-names-first.tsv".format(p=config["fai_path"]),
+    log:
+        "results/logs/angsd_chromosome_names/log.txt"
+    shell:
+        " (                                      "
+        " awk '                                  "
+        "   BEGIN {{OFS=\"\\t\"}}                "
+        "   {{ gsub(/_/, \"-\", $1); print $0}}  "
+        " ' {input} > {output.fai} &&            "
+        "  paste {input} {output.fai} | cut -f 1,6 > {output.angsd_second} && "
+        "  paste {output.fai} {input} | cut -f 1,6 > {output.angsd_first}     "
+        " )  2> {log}                            "
 
 

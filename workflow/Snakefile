@@ -9,8 +9,8 @@ include: "rules/common.smk"
 
 #localrules: write_bcf_regions
 rule all:
-	input:
-		targs=expand_targets()
+    input:
+        targs=expand_targets()
 
 
 include: "rules/ref.smk"
