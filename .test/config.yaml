@@ -2,6 +2,17 @@
 ## be run on which sample subset from which parent BCF
 
 
+#### MODULES SECTION
+
+# This is what you would use on Alpine
+#Rmodule: "R/4.2.2"
+
+# This is what you would use on SEDNA
+Rmodule: "R/4.0.3"
+
+
+
+
 #### DEFINITIONS SECTIONS #####
 
 # every BCF file used here must correspond to the same
