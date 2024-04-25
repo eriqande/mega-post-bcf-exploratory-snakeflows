@@ -38,33 +38,68 @@ The configuration is set-up to accept several levels of
 options/parameters:
 
 1.  Specification of which BCF file to use:
+
     - these are sublevels of `config["bcf"]`
     - their keys determine the wildcard in `bcf_{bcf_id}`
+
 2.  Specification of filtering of sites in the VCF, via bcftools
     (`bcftools_opts`).
+
     - sublevels of `config[bcftools_opts]`
     - their keys determine the wildcards in `filt_{bcfilt}`
 
-These two get wrapped up into a set of `main_params` that describe how
-the VCF file is initially filtered and thinned, etc. At this point we
-can add a specification for thinning level, too. And also for further
-downstream MAF filtering. See for example:
+    These two get wrapped up into a set of `main_params` that describe
+    how the VCF file is initially filtered and thinned, etc. At this
+    point we can add a specification for thinning level, too. And also
+    for further downstream MAF filtering (for example, analyses done by
+    angsd that provide for MAF filtering. This combination vcf,
+    filtering, thinning specification and additional MAF filtering is
+    specified in the `main_params` block of the config, for example:
 
-``` yaml
-main_params:
-  standard:
-    bcf: testy
-    filt: snps05
-    thin_spec: "0_0"
-    maf: 0.05
-```
+    ``` yaml
+    main_params:
+      standard:
+        bcf: testy
+        filt: snps05
+        thin_spec: "0_0"
+        maf: 0.05
+    ```
 
-Then, there is an additional level of options/parameters that describe
-which individuals remain in the analysis. These are specified as a
-subset of each bcf file in the config, under `sample_subsets`.
+3.  There is an additional level of options/parameters that describe
+    which individuals remain in the analysis. These are specified as a
+    subset of each bcf file in the config, under `sample_subsets`.
 
-Finally, for whatever analysis you would like to do, the
-`config["params"]` section holds though.
+4.  Finally, for whatever analysis you would like to do, the
+    `config["params"]` section let’s you define different named
+    parameter set. Different analyses require different parameters, as
+    we will see.
+
+## Target analyses
+
+Currently there are just a few different analyses that this does, which
+we list here, somewhat in order of complexity (though that is
+arbitrary).
+
+- `filtervcf`: a super simple target to just create a filtered BCF file.
+  It takes the main_params, and a sample_subset, but no target-specific
+  params. (you can just pass in “dummy” for those).
+- `beagle_gl`: simply create a beagle file of genotype likelihoods. It
+  takes the main_params, and a sample_subset, but no target-specific
+  params. (you can just pass in “dummy” for those).
+- `pcangsd_plain`: just do a simple PCAngsd analysis from the genotype
+  likelihoods. It also computes the selection statistics that PCAngsd
+  does. It requires a params, but it can be empty.
+- `do_asso_ybin`: Use angsd to do a simple case-control association
+  study. This requires a `ybin` entry in the sample subset that is a
+  file with a 0 or a 1 on each line, indicating whether the sample is a
+  control or a case. It also requires analysis specific parameters, but
+  those can be empty.  
+- `do_asso`: do an association study using the ANGSD -doAsso 4 option,
+  using the principle components from PCAngsd to account for population
+  structure. This is the most complicated in terms of what is needed.
+  There must be: - A `dotsample` field in the sample_subset that holds
+  the angsd dot-sample file that holds the phenotypes and any
+  covariates - `WhichPhe`
 
 ## Specifying targets
 
