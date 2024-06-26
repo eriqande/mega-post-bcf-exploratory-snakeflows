@@ -7,7 +7,8 @@ ruleorder:  bcf_samps_and_filt_gather > bcf_thin_gather
 
 include: "rules/common.smk"
 
-#localrules: write_bcf_regions
+localrules: postprocess_ngsadmix #write_bcf_regions
+
 rule all:
     input:
         targs=expand_targets()
