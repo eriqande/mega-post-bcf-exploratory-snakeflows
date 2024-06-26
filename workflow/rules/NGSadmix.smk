@@ -54,8 +54,8 @@ rule postprocess_ngsadmix:
     shell:
         "paste {input.samp_list} {input.qopt} | "
         " awk -v K={params.K} ' "
-        "  BEGIN {{OFS=\"\\t\"; printf(\"sample\"); for(i=1;i<=K;i++) printf(\"\\tQ%02d\", i); printf(\"\\n\")}} "
-        " {{print}} ' "
+        "  BEGIN {{OFS=\"\\t\"; printf(\"sample\"); for(i=1;i<=K;i++) printf(\"\\tQ%d\", i); printf(\"\\n\")}} "
+        " {{print}} ' > {output.qopt} 2> {log} "
 
 
 
