@@ -95,7 +95,7 @@ arbitrary).
   control or a case. It also requires analysis specific parameters, but
   those can be empty.  
 - `do_asso`: do an association study using the ANGSD -doAsso 4 option,
-  using the principle components from PCAngsd to account for population
+  using the principal components from PCAngsd to account for population
   structure. This is the most complicated in terms of what is needed.
   There must be: - A `dotsample` field in the sample_subset that holds
   the angsd dot-sample file that holds the phenotypes and any
