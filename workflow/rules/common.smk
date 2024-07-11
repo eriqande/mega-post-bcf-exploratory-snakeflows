@@ -132,6 +132,13 @@ def expand_targets():
             R=config["params"]["ngsadmix"][T[2]]["reps"]
             reps=list(range(1,R+1))
             ret = ret + expand(mainp + "/K_{K}_rep_{rep}/output.qopt_with_sample_names", K=kvals, rep=reps)
+    if "evaladmix" in targ:
+        for T in targ["evaladmix"]:
+            mainp = main_params_path("evaladmix", T, False)
+            kvals=config["params"]["evaladmix"][T[2]]["kvals"]
+            R=config["params"]["evaladmix"][T[2]]["reps"]
+            reps=list(range(1,R+1))
+            ret = ret + expand(mainp + "/K_{K}_rep_{rep}/output.corres.txt_with_sample_names", K=kvals, rep=reps)
     return ret
 
 
