@@ -45,7 +45,7 @@ rule postprocess_evaladmix:
         samp_list="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/info/samples.txt"
     output:
         header="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/evaladmix/maf_{min_maf}/K_{K}_rep_{rep}/header.txt", 
-        body="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/evaladmix/maf_{min_maf}/K_{K}_rep_{rep}/body.txt"
+        body="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/evaladmix/maf_{min_maf}/K_{K}_rep_{rep}/body.txt",
         corres="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/evaladmix/maf_{min_maf}/K_{K}_rep_{rep}/output.corres.txt_with_sample_names"
     threads: 1
     log:
