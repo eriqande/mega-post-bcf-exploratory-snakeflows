@@ -51,7 +51,7 @@ rule postprocess_evaladmix:
     log:
         "results/logs/postprocess_evaladmix/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/K_{K}_rep_{rep}/log.txt"
     shell:
-        "awk -f workflow/scripts/corres_header.awk {input.samp_list} > {output.header} && "
+        "(awk -f workflow/scripts/corres_header.awk {input.samp_list} > {output.header} && "
         " paste {input.samp_list} {input.corres} > {output.body}  && "
-        " cat {output.header} {output.body} > {output.corres} 2> {log} "
+        " cat {output.header} {output.body} > {output.corres}) 2> {log} "
     
