@@ -4,4 +4,4 @@ BEGIN {printf("sample")}
 
 {for(i=1;i<=1;i++) printf("\t$s", $1)}
 
-END {printf("\n)}
+END {printf("\n")}
