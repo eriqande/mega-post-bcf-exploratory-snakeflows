@@ -83,6 +83,10 @@ params:
       angsd_opts: " -doMaf 4 -doAsso 4 "
       whichPhe: " age "
       whichCov: " cohort,PC-1,PC-2,PC-3,PC-4 "
+    age_cohort_noPCs:
+      angsd_opts: " -doMaf 4 -doAsso 4 "
+      whichPhe: " age "
+      whichCov: " cohort "
   ngsadmix:
       four_for_five:
         reps: 4
