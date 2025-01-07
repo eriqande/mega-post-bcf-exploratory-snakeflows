@@ -112,6 +112,7 @@ targets:
     - ["standard", "all", "age_cohort_4PCs"]
     - ["standard", "males", "age_cohort_4PCs"]
     - ["standard", "females", "age_cohort_4PCs"]
+    - ["standard", "all", "age_cohort_noPCs"]
   beagle_gl: # this is here in case you just want to 
     - ["standard", "males", "dummy"]
   ngsadmix:
