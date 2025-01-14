@@ -9,4 +9,4 @@ dependencies:
     - scipy>1.14.0
     - pip
     - pip:
-        - pcangsd==1.36.1
+        - pcangsd==1.36.0
