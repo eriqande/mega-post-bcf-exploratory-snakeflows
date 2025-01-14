@@ -67,7 +67,7 @@ rule pcangsd_with_gposts:
         minMaf = "{min_maf}"
     output:
         cov="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.cov",
-        gposts="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.gpost.tsv",
+        gposts="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.post",
         freqs="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.freqs",
         sites="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.sites"
         
@@ -88,7 +88,7 @@ rule pcangsd_with_gposts:
 rule pcangsd_beagle_post_bung:
     input:
         beagle="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/beagle-gl/beagle-gl.gz",
-        gposts="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.gpost.tsv",
+        gposts="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.post",
         sites="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.sites",
     output:
         beagle_posts="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/beagle-post.gz",
@@ -111,7 +111,7 @@ rule pcangsd_beagle_post_bung:
 rule pcangsd_beagle_post_slice:
     input:
         beagle="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/beagle-gl/beagle-gl.gz",
-        gposts="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.gpost.tsv",
+        gposts="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.post",
         sites="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd/maf_{min_maf}/out.sites",
         scaff_grp_path=get_scaff_group_path
     output:
