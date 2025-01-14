@@ -81,7 +81,7 @@ rule pcangsd_with_gposts:
         beagle="results/logs/pcangsd_with_gposts/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/beagle_paste_part.txt",
     shell:
         " (OUTPRE=$(dirname {output.gposts})/out && "
-        " pcangsd -b {input.beagle} --maf {params.minMaf} -t {threads} --geno_post_save --maf_save --sites_save --out $OUTPRE > {log.pcangsd} 2>&1) "
+        " pcangsd -b {input.beagle} --maf {params.minMaf} -t {threads} --post --maf_save --sites_save --out $OUTPRE > {log.pcangsd} 2>&1) "
         
 
 
