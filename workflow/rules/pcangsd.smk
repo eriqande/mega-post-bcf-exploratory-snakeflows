@@ -4,22 +4,22 @@
 
 # this is a rule that will build and install pcangsd into
 # the active conda env.
-rule install_pcangsd:
-    params:
-        hash=config["pcangsd"]["version"],
-        url=config["pcangsd"]["url"]
-    output:  
-        flagfile=touch("results/flags/pcangsd_installed")
-    conda:
-        "../envs/pcangsd.yaml"
-    log:
-        "results/logs/install_pcangsd/log.txt"
-    shell:
-        "(TMP=$(mktemp -d) && cd $TMP && "
-        " git clone {params.url} && "
-        " cd pcangsd  && "
-        " git checkout {params.hash} && "
-        " pip3 install .  ) > {log} 2>&1  "
+#rule install_pcangsd:
+#    params:
+#        hash=config["pcangsd"]["version"],
+#        url=config["pcangsd"]["url"]
+#    output:  
+#        flagfile=touch("results/flags/pcangsd_installed")
+#    conda:
+#        "../envs/pcangsd.yaml"
+#    log:
+#        "results/logs/install_pcangsd/log.txt"
+#    shell:
+#        "(TMP=$(mktemp -d) && cd $TMP && "
+#        " git clone {params.url} && "
+#        " cd pcangsd  && "
+#       " git checkout {params.hash} && "
+#       " pip3 install .  ) > {log} 2>&1  "
 
 
 
@@ -35,7 +35,7 @@ rule install_pcangsd:
 # this is for simple pcangsd with no genotype posteriors.  It also computes the selection statistics.
 rule pcangsd_no_gposts:
     input:  
-        flagfile="results/flags/pcangsd_installed",
+        #flagfile="results/flags/pcangsd_installed",
         beagle="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/beagle-gl/beagle-gl.gz"
     params: 
         minMaf = "{min_maf}"
@@ -61,7 +61,7 @@ rule pcangsd_no_gposts:
 # this one spits out the genotype posteriors and then beagle-izes them
 rule pcangsd_with_gposts:
     input:  
-        flagfile="results/flags/pcangsd_installed",
+        #flagfile="results/flags/pcangsd_installed",
         beagle="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/beagle-gl/beagle-gl.gz"
     params: 
         minMaf = "{min_maf}"
