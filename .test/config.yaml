@@ -52,9 +52,6 @@ bcftools_opts:
 
 #### SETTING SECTIONS #####
 
-pcangsd:
-  url: https://github.com/eriqande/pcangsd.git
-  version: 0d4761be74390bf3a0ca1e13cd0cfe920d4a0214
 ngsAdmix:
   url: https://github.com/aalbrechtsen/NGSadmix.git
   version: a5cde0502ac1e1cfce994bc9fd72ef1813c262b6

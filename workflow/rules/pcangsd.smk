@@ -2,34 +2,6 @@
 
 
 
-# this is a rule that will build and install pcangsd into
-# the active conda env.
-#rule install_pcangsd:
-#    params:
-#        hash=config["pcangsd"]["version"],
-#        url=config["pcangsd"]["url"]
-#    output:  
-#        flagfile=touch("results/flags/pcangsd_installed")
-#    conda:
-#        "../envs/pcangsd.yaml"
-#    log:
-#        "results/logs/install_pcangsd/log.txt"
-#    shell:
-#        "(TMP=$(mktemp -d) && cd $TMP && "
-#        " git clone {params.url} && "
-#        " cd pcangsd  && "
-#       " git checkout {params.hash} && "
-#       " pip3 install .  ) > {log} 2>&1  "
-
-
-
-
-# then, whenever you need to use pcangsd, you call the same
-# conda environment, and have the flagfile as an input
-# depenency to ensure that pcangsd has already been successfully
-# built into that conda env.
-# the active conda env.  Yep! That works nicely.
-
 
 
 # this is for simple pcangsd with no genotype posteriors.  It also computes the selection statistics.
