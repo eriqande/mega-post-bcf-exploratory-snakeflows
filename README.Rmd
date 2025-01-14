@@ -15,8 +15,12 @@ _A Snakemake Workflow to Facilitate Exploratory (and Production) Analyses from
 Genomic Data Contained in a VCF/BCF File_
 
 
-  
-  
+Quickstart on the test data set---run it on 20 cores:
+```sh
+# dry-run  (remove -n to run it for real)
+snakemake -n -p --cores 20 --use-conda  --use-envmodules  --configfile .test/config.yaml
+```
+
   
 
 It has been my experience that once you get your VCF file, there is a lot of exploring
@@ -132,6 +136,10 @@ targets:
 ```
 
 
+## News
+
+- Updated the workflow to work with the main branch of `pcangsd` that now includes an option to
+  write a file with the genotype posteriors.  (2025-01-14)
 
 
 ## Boneyard

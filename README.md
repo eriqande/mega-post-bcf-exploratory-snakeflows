@@ -5,6 +5,13 @@ Eric C. Anderson
 *A Snakemake Workflow to Facilitate Exploratory (and Production)
 Analyses from Genomic Data Contained in a VCF/BCF File*
 
+Quickstart on the test data set—run it on 20 cores:
+
+``` sh
+# dry-run  (remove -n to run it for real)
+snakemake -n -p --cores 20 --use-conda  --use-envmodules  --configfile .test/config.yaml
+```
+
 It has been my experience that once you get your VCF file, there is a
 lot of exploring and backtracking, and reconfiguring, and dropping of
 individuals, and grouping of samples, and alternative filterings, etc.
@@ -95,7 +102,7 @@ arbitrary).
   control or a case. It also requires analysis specific parameters, but
   those can be empty.  
 - `do_asso`: do an association study using the ANGSD -doAsso 4 option,
-  using the principal components from PCAngsd to account for population
+  using the principle components from PCAngsd to account for population
   structure. This is the most complicated in terms of what is needed.
   There must be: - A `dotsample` field in the sample_subset that holds
   the angsd dot-sample file that holds the phenotypes and any
@@ -124,6 +131,12 @@ targets:
 ```
 
     ## 'results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/pcangsd_plain/maf_{min_maf}/{param_set}/out.args'
+
+## News
+
+- Updated the workflow to work with the main branch of `pcangsd` that
+  now includes an option to write a file with the genotype posteriors.
+  (2025-01-14)
 
 ## Boneyard
 
