@@ -69,6 +69,39 @@ rule angsd_do_asso_ybin_scatter:
         "  -out $(dirname {output.arg})/{wildcards.scaff_grp}  > {log} 2>&1 "
 
 
+
+# this one just takes straight-up genotype likelihoods, rather than
+# the genotype posteriors from PCAngsd.  This should only be used
+# when there is no population/family structure in the sample.
+rule angsd_do_asso_no_PCA_scatter:
+    input: 
+        bcf="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/sections/{scaff_grp}.bcf",
+        fai="{p}-ANGSD".format(p=config["fai_path"]),
+        sampleFile=lambda wc: config["bcf"][wc.bcf_id]["sample_subsets"][wc.sampsub]["dotsample"]
+    params:
+        dicto= lambda wc: config["params"]["do_asso_no_PCA"][wc.param_set]
+    log:
+        "results/logs/do_asso_no_PCA/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/maf_{min_maf}/{param_set}/sections/{scaff_grp}.log"
+    conda:
+        "../envs/angsd.yaml"
+    output:
+         arg="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso_no_PCA/maf_{min_maf}/{param_set}/sections/{scaff_grp}.arg",
+         lrt="results/bcf_{bcf_id}/filt_{bcfilt}/{sampsub}/thin_{thin_int}_{thin_start}/do_asso_no_PCA/maf_{min_maf}/{param_set}/sections/{scaff_grp}.lrt0.gz"
+    shell:
+        " angsd {params.dicto[angsd_opts]}  -vcf-pl {input.bcf} -fai {input.fai} "
+        "  -sampleFile {input.sampleFile} -whichPhe {params.dicto[whichPhe]} "
+        "  -whichCov {params.dicto[whichCov]}  "
+        "  -out $(dirname {output.arg})/{wildcards.scaff_grp}  > {log} 2>&1 "
+
+
+
+
+
+
+
+
+
+
 # this uses do_asso_dir wildcard to be applicable to either do_asso_scatter or do_asso_ybin_scatter
 
 rule angsd_do_asso_gather:

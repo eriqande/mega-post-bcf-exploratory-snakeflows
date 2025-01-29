@@ -95,6 +95,13 @@ def expand_targets():
             ret = ret + [mainp + "/all-scaff-groups.lrt0.gz"]
             # get the manhattan plots
             ret = ret + [mainp + "/{sampsub}-{param_set}-manhattan-plot.jpg".format(sampsub=T[1], param_set=T[2])]
+    if "do_asso_no_PCA" in targ:
+        for T in targ["do_asso_no_PCA"]:
+            mainp = main_params_path("do_asso_no_PCA", T)
+            # get the LRT files
+            ret = ret + [mainp + "/all-scaff-groups.lrt0.gz"]
+            # get the manhattan plots
+            ret = ret + [mainp + "/{sampsub}-{param_set}-manhattan-plot.jpg".format(sampsub=T[1], param_set=T[2])]
     if "do_asso_ybin" in targ:
         for T in targ["do_asso_ybin"]:
             mainp = main_params_path("do_asso_ybin", T)
